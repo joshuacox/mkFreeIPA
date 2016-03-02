@@ -15,7 +15,7 @@ help:
 temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID
 
 # after letting temp settle you can `make grab` and grab the data directory for persistence
-prod: TAG NAME FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
+prod: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
 
 runtempCID:
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
