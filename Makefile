@@ -65,6 +65,7 @@ rm-image:
 	-@rm freeipaCID
 
 rmtemp:
+	-@docker kill `cat runtempCID`
 	-@docker rm `cat runtempCID`
 	-@rm runtempCID
 
