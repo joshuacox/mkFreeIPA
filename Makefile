@@ -94,7 +94,7 @@ grab: FREEIPA_DATADIR
 
 FREEIPA_DATADIR:
 	-mkdir -p datadir
-	docker cp `cat freeipaCID`:/data  - |sudo tar -C datadir/ -pxvf -
+	docker cp `cat runtempCID`:/data  - |sudo tar -C datadir/ -pxvf -
 	echo `pwd`/datadir/data > FREEIPA_DATADIR
 
 FREEIPA_FQDN:
