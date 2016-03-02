@@ -12,11 +12,15 @@ help:
 	@echo ""   4. make enter     - execute an interactive bash in docker container
 	@echo ""   3. make logs      - follow the logs of docker container
 
-temp: TAG NAME FREEIPA_MASTER_PASS runtempCID
+temp: TAG NAME FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID
 
-prod: TAG NAME FREEIPA_MASTER_PASS freeipaCID
+# after letting temp settle you can `make grab` and grab the data directory for persistence
+prod: TAG NAME FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
 
 runtempCID:
+	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
+	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
+	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	$(eval IPA_SERVER_IP := $(shell cat IPA_SERVER_IP))
@@ -39,6 +43,7 @@ freeipaCID:
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
+	$(eval IPA_SERVER_IP := $(shell cat IPA_SERVER_IP))
 	@docker run --name=$(NAME) \
 	--cidfile="freeipaCID" \
 	-d \
@@ -92,6 +97,16 @@ FREEIPA_DATADIR:
 	-mkdir -p datadir
 	docker cp `cat freeipaCID`:/data  - |sudo tar -C datadir/ -pxvf -
 	echo `pwd`/datadir/data > FREEIPA_DATADIR
+
+FREEIPA_FQDN:
+	@while [ -z "$$FREEIPA_FQDN" ]; do \
+		read -r -p "Enter the FQDN you wish to associate with this container [FREEIPA_FQDN]: " FREEIPA_FQDN; echo "$$FREEIPA_FQDN">>FREEIPA_FQDN; cat FREEIPA_FQDN; \
+	done ;
+
+IPA_SERVER_IP:
+	@while [ -z "$$IPA_SERVER_IP" ]; do \
+		read -r -p "Enter the public IP address of this container [IPA_SERVER_IP]: " IPA_SERVER_IP; echo "$$IPA_SERVER_IP">>IPA_SERVER_IP; cat IPA_SERVER_IP; \
+	done ;
 
 FREEIPA_MASTER_PASS:
 	@while [ -z "$$FREEIPA_MASTER_PASS" ]; do \
