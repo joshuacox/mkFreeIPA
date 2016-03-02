@@ -12,13 +12,12 @@ help:
 	@echo ""   4. make enter     - execute an interactive bash in docker container
 	@echo ""   3. make logs      - follow the logs of docker container
 
-temp: TAG NAME FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID
+temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID
 
 # after letting temp settle you can `make grab` and grab the data directory for persistence
 prod: TAG NAME FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
 
 runtempCID:
-	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	$(eval NAME := $(shell cat NAME))
