@@ -79,6 +79,9 @@ enter:
 logs:
 	docker logs -f `cat freeipaCID`
 
+templogs:
+	docker logs -f `cat runtempCID`
+
 NAME:
 	@while [ -z "$$NAME" ]; do \
 		read -r -p "Enter the name you wish to associate with this container [NAME]: " NAME; echo "$$NAME">>NAME; cat NAME; \
