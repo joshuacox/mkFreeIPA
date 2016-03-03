@@ -118,3 +118,6 @@ FREEIPA_MASTER_PASS:
 
 example:
 	cp -i TAG.example TAG
+
+entropy:
+	docker run --privileged -d joshuacox/havegedocker:latest
