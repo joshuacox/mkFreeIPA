@@ -1,4 +1,4 @@
-.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs example temp prod
+.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs example temp prod pull
 
 all: help
 
@@ -72,6 +72,9 @@ rmtemp:
 rm: kill rm-image
 
 clean: rmall
+
+pull:
+	docker pull `cat TAG`
 
 enter:
 	docker exec -i -t `cat freeipaCID` /bin/bash
