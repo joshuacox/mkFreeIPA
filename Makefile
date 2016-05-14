@@ -17,6 +17,24 @@ temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID
 # after letting temp settle you can `make grab` and grab the data directory for persistence
 prod: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
 
+replica:
+	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
+	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
+	$(eval NAME := $(shell cat NAME))
+	$(eval TAG := $(shell cat TAG))
+	@docker run --name=$(NAME) \
+	--cidfile="freeipaCID" \
+	-d \
+	-p 53:53/udp -p 53:53 \
+	-p 80:80 -p 443:443 -p 389:389 -p 636:636 -p 88:88 -p 464:464 \
+	-p 88:88/udp -p 464:464/udp -p 123:123/udp -p 7389:7389 \
+	-p 9443:9443 -p 9444:9444 -p 9445:9445 \
+	-h $(FREEIPA_FQDN) \
+	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+	-v $(FREEIPA_DATADIR):/data:Z \
+	-t $(TAG)
+
+
 runtempCID:
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
