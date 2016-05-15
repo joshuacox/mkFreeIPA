@@ -177,8 +177,7 @@ IPA_SERVER_IP:
 
 FREEIPA_MASTER_PASS:
 	@while [ -z "$$FREEIPA_MASTER_PASS" ]; do \
-		read -r -s -p "Enter the Master password you wish to associate with this container [FREEIPA_MASTER_PASS]: " 
-FREEIPA_MASTER_PASS; echo "$$FREEIPA_MASTER_PASS">>FREEIPA_MASTER_PASS; cat FREEIPA_MASTER_PASS; \
+	 	read -r -s -p "Enter the Master password you wish to associate with this container [FREEIPA_MASTER_PASS]: " FREEIPA_MASTER_PASS; echo "$$FREEIPA_MASTER_PASS">>FREEIPA_MASTER_PASS; cat FREEIPA_MASTER_PASS; \
 	done ;
 
 example:
