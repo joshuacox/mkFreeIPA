@@ -12,6 +12,10 @@ when this finishes (not before) you can then
 grab will make a `datadir` in the current directory and copy `/data` out
 of the temporary container to be used in a persistent setup
 
+the path to the data directory is then echo'd into
+FREEIPA_DATADIR
+to be used by the `prod` step later
+
 `make rmtemp` will clean up our temporary containers, but will not delete the `datadir`
 
 I tend to move the datadir at this point (e.g. `mv datadir /exports/freeipa/`), then update FREEIPA_DATADIR appropriately
