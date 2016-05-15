@@ -11,7 +11,7 @@ help:
 	@echo ""   3. make prod   - run production container with persistent directories
 	@echo ""   4. make jabber - make a jabber container that connects to our new FreeIPA server
 
-temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID
+temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID templogs
 
 # after letting temp settle you can `make grab` and grab the data directory for persistence
 prod: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
@@ -190,7 +190,10 @@ entropy:
 
 config:
 	curl icanhazip.com > IPA_SERVER_IP
-	dig -x +short `cat IPA_SERVER_IP`> FREEIPA_FQDN
+	dig - `cat IPA_SERVER_IP` +short > FREEIPA_FQDN
+	cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
+	echo 'uid' >FREEIPA_EJABBER_LDAP_UID
+
 
 ejabberdCID:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
