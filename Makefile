@@ -252,3 +252,5 @@ cookie:
 
 registerJabberReplicant:
 	docker exec `cat ejabberdCID` ejabberdctl join_cluster 'ejabberd@$(FREEIPA_EJABBER_CLUSTER_PARENT)'
+
+replicant: replica
