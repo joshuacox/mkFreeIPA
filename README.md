@@ -31,3 +31,14 @@ first from your mkFreeIPA directory, enter the running FreeIPA container with `m
 now you can run the `ldapmodify` command directly on your running instance
 
 create the  `/root/jabber.ldif` as normal, but realize if you leave it in /root it will disappear upon restarting the container, instead use /data for anything you want to survive restarts
+
+you can now run `make jabber` which will prompt you for the information it needs this will correspond to the example data given:
+
+```
+{ldap_servers, ["ds01.example.com"]}.
+{ldap_uids, [{"uid"}]}.
+{ldap_filter, "(memberOf=cn=jabber_users,cn=groups,cn=accounts,dc=example,dc=com)"}.
+{ldap_base, "dc=example,dc=com"}.
+{ldap_rootdn, "uid=ejabberd,cn=sysaccounts,cn=etc,dc=example,dc=com"}.
+{ldap_password, "secret123"}.
+```
