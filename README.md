@@ -42,3 +42,4 @@ you can now run `make jabber` which will prompt you for the information it needs
 {ldap_rootdn, "uid=ejabberd,cn=sysaccounts,cn=etc,dc=example,dc=com"}.
 {ldap_password, "secret123"}.
 ```
+

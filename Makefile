@@ -122,6 +122,16 @@ FREEIPA_DATADIR:
 	docker cp `cat runtempCID`:/data  - |sudo tar -C datadir/ -pxvf -
 	echo `pwd`/datadir/data > FREEIPA_DATADIR
 
+FREEIPA_FQDN:
+	@while [ -z "$$FREEIPA_FQDN" ]; do \
+		read -r -p "Enter the FQDN you wish to associate with this container [FREEIPA_FQDN]: " FREEIPA_FQDN; echo "$$FREEIPA_FQDN">>FREEIPA_FQDN; cat FREEIPA_FQDN; \
+	done ;
+
+FREEIPA_EJABBER_ERLANG_COOKIE:
+	@while [ -z "$$FREEIPA_EJABBER_ERLANG_COOKIE" ]; do \
+		read -r -p "Enter the EJABBER_ERLANG_COOKIE you wish to associate with this container [FREEIPA_EJABBER_ERLANG_COOKIE]: " FREEIPA_EJABBER_ERLANG_COOKIE; echo "$$FREEIPA_EJABBER_ERLANG_COOKIE">>FREEIPA_EJABBER_ERLANG_COOKIE; cat FREEIPA_EJABBER_ERLANG_COOKIE; \
+	done ;
+
 FREEIPA_EJABBER_LDAP_ROOTDN:
 	@while [ -z "$$FREEIPA_EJABBER_LDAP_ROOTDN" ]; do \
 		read -r -p "Enter the EJABBER_LDAP_ROOTDN you wish to associate with this container [FREEIPA_EJABBER_LDAP_ROOTDN]: " FREEIPA_EJABBER_LDAP_ROOTDN; echo "$$FREEIPA_EJABBER_LDAP_ROOTDN">>FREEIPA_EJABBER_LDAP_ROOTDN; cat FREEIPA_EJABBER_LDAP_ROOTDN; \
@@ -191,6 +201,7 @@ ejabberd:
 	-h $(FREEIPA_FQDN) \
 	-e "XMPP_DOMAIN=$(FREEIPA_DOMAIN) \
 	-e "ERLANG_NODE=ejabberd" \
+	-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
 	-e "TZ=America/Chicago" \
 	-e "EJABBERD_ADMIN=admin@$(FREEIPA_DOMAIN)" \
 	-e "EJABBERD_AUTH_METHOD=ldap" \
@@ -204,12 +215,12 @@ ejabberd:
 	-e "EJABBERD_LDAP_BASE=$(FREEIPA_EJABBER_LDAP_BASE)" \
 	-e "EJABBERD_LDAP_FILTER=$(FREEIPA_EJABBER_LDAP_FILTER)" \
 	-e "EJABBERD_LDAP_UIDS=$(FREEIPA_EJABBER_LDAP_UID)" \
-	-v "/exports/whc-ejabberd/database:/opt/ejabberd/database" \
 	-v "/exports/whc-ejabberd/ssl:/opt/ejabberd/ssl" \
-	-v "/exports/whc-ejabberd/conf:/opt/ejabberd/conf" \
 	rroemhild/ejabberd
 
     # -e "EJABBERD_ADMIN_RANDPWD=true" \
+	# -v "/exports/whc-ejabberd/database:/opt/ejabberd/database" \
+	# -v "/exports/whc-ejabberd/conf:/opt/ejabberd/conf" \
 	#EJABBERD_LDAP_SERVERS: List of IP addresses or DNS names of your LDAP servers. This option is required.
 	#EJABBERD_LDAP_ENCRYPT: The value tls enables encryption by using LDAP over SSL. The default value is: none.
 	#EJABBERD_LDAP_TLS_VERIFY: false|soft|hard This option specifies whether to verify LDAP server certificate or not when TLS is enabled. The default is false which means no checks are performed.
@@ -223,3 +234,6 @@ ejabberd:
 	#EJABBERD_LDAP_UIDS: ldap_uidattr:ldap_uidattr_format The default attributes are uid:%u.
 	#EJABBERD_LDAP_FILTER: RFC 4515 LDAP filter. The default Filter value is undefined.
 	#EJABBERD_LDAP_DN_FILTER: { Filter: FilterAttrs } This filter is applied on the results returned by the main filter. By default ldap_dn_filter is undefined.
+
+cookie:
+	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
