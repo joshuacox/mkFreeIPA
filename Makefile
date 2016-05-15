@@ -190,7 +190,7 @@ entropy:
 
 config:
 	curl icanhazip.com > IPA_SERVER_IP
-	dig -x +short `cat IPA_SERVER_IP`
+	dig -x +short `cat IPA_SERVER_IP`> FREEIPA_FQDN
 
 ejabberdCID:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
