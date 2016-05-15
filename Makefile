@@ -16,9 +16,11 @@ temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID
 # after letting temp settle you can `make grab` and grab the data directory for persistence
 prod: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
 
-jabber: prod FREEIPA_DOMAIN FREEIPA_EJABBER_LDAP_ROOTDN FREEIPA_EJABBER_LDAP_UID FREEIPA_EJABBER_LDAP_FILTER FREEIPA_EJABBER_LDAP_BASE FREEIPA_EJABBER_LDAP_PASS ejabberd
+jabber: prod FREEIPA_DOMAIN FREEIPA_EJABBER_LDAP_ROOTDN FREEIPA_EJABBER_LDAP_UID FREEIPA_EJABBER_LDAP_FILTER FREEIPA_EJABBER_LDAP_BASE FREEIPA_EJABBER_LDAP_PASS ejabberdCID
 
-replica:
+replica: FREEIPA_EJABBER_CLUSTER_PARENT replicaCID ejabberdCID registerJabberReplicant
+
+replicaCID:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	$(eval NAME := $(shell cat NAME))
@@ -34,6 +36,7 @@ replica:
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 	-v $(FREEIPA_DATADIR):/data:Z \
 	-t $(TAG)
+	docker ps -ql >replicaCID
 
 runtempCID:
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
@@ -137,6 +140,11 @@ FREEIPA_EJABBER_LDAP_ROOTDN:
 		read -r -p "Enter the EJABBER_LDAP_ROOTDN you wish to associate with this container [FREEIPA_EJABBER_LDAP_ROOTDN]: " FREEIPA_EJABBER_LDAP_ROOTDN; echo "$$FREEIPA_EJABBER_LDAP_ROOTDN">>FREEIPA_EJABBER_LDAP_ROOTDN; cat FREEIPA_EJABBER_LDAP_ROOTDN; \
 	done ;
 
+FREEIPA_EJABBER_CLUSTER_PARENT:
+	@while [ -z "$$FREEIPA_EJABBER_CLUSTER_PARENT" ]; do \
+		read -r -p "Enter the EJABBER_CLUSTER_PARENT you wish to associate with this container [FREEIPA_EJABBER_CLUSTER_PARENT]: " FREEIPA_EJABBER_CLUSTER_PARENT; echo "$$FREEIPA_EJABBER_CLUSTER_PARENT">>FREEIPA_EJABBER_CLUSTER_PARENT; cat FREEIPA_EJABBER_CLUSTER_PARENT; \
+	done ;
+
 FREEIPA_EJABBER_LDAP_PASS:
 	@while [ -z "$$FREEIPA_EJABBER_LDAP_PASS" ]; do \
 		read -r -p "Enter the EJABBER_LDAP_PASS you wish to associate with this container [FREEIPA_EJABBER_LDAP_PASS]: " FREEIPA_EJABBER_LDAP_PASS; echo "$$FREEIPA_EJABBER_LDAP_PASS">>FREEIPA_EJABBER_LDAP_PASS; cat FREEIPA_EJABBER_LDAP_PASS; \
@@ -178,7 +186,7 @@ example:
 entropy:
 	docker run --privileged -d joshuacox/havegedocker:latest
 
-ejabberd:
+ejabberdCID:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
@@ -188,11 +196,13 @@ ejabberd:
 	$(eval FREEIPA_EJABBER_LDAP_BASE := $(shell cat FREEIPA_EJABBER_LDAP_BASE))
 	$(eval FREEIPA_EJABBER_LDAP_FILTER := $(shell cat FREEIPA_EJABBER_LDAP_FILTER))
 	$(eval FREEIPA_EJABBER_LDAP_UID := $(shell cat FREEIPA_EJABBER_LDAP_UID))
+	$(eval FREEIPA_EJABBER_ERLANG_COOKIE := $(shell cat FREEIPA_EJABBER_ERLANG_COOKIE))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	$(eval IPA_SERVER_IP := $(shell cat IPA_SERVER_IP))
 	docker run -d \
 	--name "ejabberd" \
+	--cidfile="ejabbderdCID" \
 	-p 5222:5222 \
 	-p 5269:5269 \
 	--restart=always \
@@ -218,7 +228,9 @@ ejabberd:
 	-v "/exports/whc-ejabberd/ssl:/opt/ejabberd/ssl" \
 	rroemhild/ejabberd
 
-    # -e "EJABBERD_ADMIN_RANDPWD=true" \
+ # View the docs here https://github.com/rroemhild/docker-ejabberd#cluster-example
+ # This is a local copy for quick reference of the main values
+	# -e "EJABBERD_ADMIN_RANDPWD=true" \
 	# -v "/exports/whc-ejabberd/database:/opt/ejabberd/database" \
 	# -v "/exports/whc-ejabberd/conf:/opt/ejabberd/conf" \
 	#EJABBERD_LDAP_SERVERS: List of IP addresses or DNS names of your LDAP servers. This option is required.
@@ -237,3 +249,6 @@ ejabberd:
 
 cookie:
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
+
+registerJabberReplicant:
+	docker exec `cat ejabberdCID` ejabberdctl join_cluster 'ejabberd@$(FREEIPA_EJABBER_CLUSTER_PARENT)'
