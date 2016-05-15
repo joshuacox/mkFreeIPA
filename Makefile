@@ -190,7 +190,7 @@ entropy:
 
 config:
 	curl icanhazip.com > IPA_SERVER_IP
-	dig - `cat IPA_SERVER_IP` +short > FREEIPA_FQDN
+	dig -x `cat IPA_SERVER_IP` +short > FREEIPA_FQDN
 	cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
 	echo 'uid' >FREEIPA_EJABBER_LDAP_UID
 	$(eval FREEIPA_EJABBER_LDAP_FILTER := $(shell echo  "(memberOf=cn=jabber_users,cn=groups,cn=accounts,dc=`cut -f2 -d'.' FREEIPA_FQDN`,dc=`cut -f3 -d'.' FREEIPA_FQDN`)"))
