@@ -193,6 +193,13 @@ config:
 	dig - `cat IPA_SERVER_IP` +short > FREEIPA_FQDN
 	cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
 	echo 'uid' >FREEIPA_EJABBER_LDAP_UID
+	$(eval FREEIPA_EJABBER_LDAP_FILTER := $(shell echo  "(memberOf=cn=jabber_users,cn=groups,cn=accounts,dc=`cut -f2 -d'.' FREEIPA_FQDN`,dc=`cut -f3 -d'.' FREEIPA_FQDN`)"))
+	echo $(FREEIPA_EJABBER_LDAP_FILTER) > FREEIPA_EJABBER_LDAP_FILTER
+	$(eval FREEIPA_EJABBER_LDAP_BASE := $(shell echo  "dc=`cut -f2 -d'.' FREEIPA_FQDN`,dc=`cut -f3 -d'.' FREEIPA_FQDN`)"))
+	echo $(FREEIPA_EJABBER_LDAP_BASE) > FREEIPA_EJABBER_LDAP_BASE
+	$(eval FREEIPA_EJABBER_LDAP_ROOTDN := $(shell echo  "uid=ejabberd,cn=sysaccounts,cn=etc,dc=`cut -f2 -d'.' FREEIPA_FQDN`,dc=`cut -f3 -d'.' FREEIPA_FQDN`)"))
+	echo $(FREEIPA_EJABBER_LDAP_ROOTDN) > FREEIPA_EJABBER_LDAP_ROOTDN
+	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
 
 
 ejabberdCID:
