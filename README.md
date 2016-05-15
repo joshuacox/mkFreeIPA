@@ -3,7 +3,7 @@ Make a persistent FreeIPA docker container PDQ
 
 
 ### Usage
-`make temp` will make a temporary ephemeral instance that we can grab the initial directorie structure from
+`make temp` will make a temporary ephemeral instance that we can grab the initial directory structure from
 
 watch the logs and wait for FreeIPA to finish installing, `make entropy` can speed this process up tremendously by supplying some extra entropy
 
