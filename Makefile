@@ -175,9 +175,10 @@ IPA_SERVER_IP:
 		read -r -p "Enter the public IP address of this container [IPA_SERVER_IP]: " IPA_SERVER_IP; echo "$$IPA_SERVER_IP">>IPA_SERVER_IP; \
 	done ;
 
+FREEIPA_MASTER_PASS: SHELL:=/bin/bash
 FREEIPA_MASTER_PASS:
 	@while [ -z "$$FREEIPA_MASTER_PASS" ]; do \
-	 	read -r -p "Enter the Master password you wish to associate with this container [FREEIPA_MASTER_PASS]: " FREEIPA_MASTER_PASS; echo "$$FREEIPA_MASTER_PASS">>FREEIPA_MASTER_PASS; cat FREEIPA_MASTER_PASS; \
+	 	read -r -e -s -p "Enter the Master password you wish to associate with this container [FREEIPA_MASTER_PASS]: " FREEIPA_MASTER_PASS; echo "$$FREEIPA_MASTER_PASS">>FREEIPA_MASTER_PASS;  \
 	done ;
 
 example:
