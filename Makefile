@@ -129,12 +129,13 @@ FREEIPA_FQDN:
 
 IPA_SERVER_IP:
 	@while [ -z "$$IPA_SERVER_IP" ]; do \
-		read -r -p "Enter the public IP address of this container [IPA_SERVER_IP]: " IPA_SERVER_IP; echo "$$IPA_SERVER_IP">>IPA_SERVER_IP; cat IPA_SERVER_IP; \
+		read -r -p "Enter the public IP address of this container [IPA_SERVER_IP]: " IPA_SERVER_IP; echo "$$IPA_SERVER_IP">>IPA_SERVER_IP; \
 	done ;
 
 FREEIPA_MASTER_PASS:
 	@while [ -z "$$FREEIPA_MASTER_PASS" ]; do \
-		read -r -p "Enter the Master password you wish to associate with this container [FREEIPA_MASTER_PASS]: " FREEIPA_MASTER_PASS; echo "$$FREEIPA_MASTER_PASS">>FREEIPA_MASTER_PASS; cat FREEIPA_MASTER_PASS; \
+		read -r -s -p "Enter the Master password you wish to associate with this container [FREEIPA_MASTER_PASS]: " 
+FREEIPA_MASTER_PASS; echo "$$FREEIPA_MASTER_PASS">>FREEIPA_MASTER_PASS; cat FREEIPA_MASTER_PASS; \
 	done ;
 
 example:
@@ -142,3 +143,8 @@ example:
 
 entropy:
 	docker run --privileged -d joshuacox/havegedocker:latest
+
+config:
+	curl icanhazip.com > IPA_SERVER_IP
+	dig -x +short `cat IPA_SERVER_IP`
+
