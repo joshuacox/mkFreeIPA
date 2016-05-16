@@ -79,3 +79,18 @@ you can now run `make jabber` which will prompt you for the information it needs
 {ldap_password, "secret123"}.
 ```
 
+### Replicants
+
+`make prepareMasterForReplicant`  will get the master prepd, you will be prompted for the hostname of the replicant
+
+copy the resulting mkFreeIPA.tgz to the replicant host
+
+untar the mkFreeIPA.tgz over your existing mkFreeIPA directory
+
+this will add the necessary password files
+
+`make prepareReplica` this will prep the replica
+
+`make replica` if everything has gone well up to now you should have a replica freeipa server
+
+replica ejabberd is a WIP
