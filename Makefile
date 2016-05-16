@@ -283,7 +283,9 @@ ejabberdCID:
 cookie:
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
 
-registerJabberReplicant:
+registerJabberReplicant: FREEIPA_EJABBER_CLUSTER_PARENT registerJabberReplicantMeat
+
+registerJabberReplicantMeat:
 	docker exec `cat ejabberdCID` ejabberdctl join_cluster 'ejabberd@$(FREEIPA_EJABBER_CLUSTER_PARENT)'
 
 replicant: replica
