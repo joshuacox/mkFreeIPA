@@ -189,17 +189,25 @@ entropy:
 	docker run --privileged -d joshuacox/havegedocker:latest
 
 config:
+	cp -i TAG.example TAG
 	curl icanhazip.com > IPA_SERVER_IP
 	dig -x `cat IPA_SERVER_IP` +short > FREEIPA_FQDN
 	cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
+	cut -f2 -d'.' FREEIPA_FQDN > FREEIPA_SLD
+	cut -f3 -d'.' FREEIPA_FQDN > FREEIPA_TLD
 	echo 'uid' >FREEIPA_EJABBER_LDAP_UID
-	$(eval FREEIPA_EJABBER_LDAP_FILTER := $(shell echo  "(memberOf=cn=jabber_users,cn=groups,cn=accounts,dc=`cut -f2 -d'.' FREEIPA_FQDN`,dc=`cut -f3 -d'.' FREEIPA_FQDN`)"))
+	$(eval FREEIPA_DOMAIN := $(shell cat FREEIPA_DOMAIN))
+	$(eval FREEIPA_TLD := $(shell cat FREEIPA_TLD))
+	$(eval FREEIPA_SLD := $(shell cat FREEIPA_SLD))
+	$(eval FREEIPA_EJABBER_LDAP_FILTER := $(shell echo  "(memberOf=cn=jabber_users,cn=groups,cn=accounts,dc=$(FREEIPA_SLD),dc=$(FREEIPA_TLD))"))
 	echo $(FREEIPA_EJABBER_LDAP_FILTER) > FREEIPA_EJABBER_LDAP_FILTER
-	$(eval FREEIPA_EJABBER_LDAP_BASE := $(shell echo  "dc=`cut -f2 -d'.' FREEIPA_FQDN`,dc=`cut -f3 -d'.' FREEIPA_FQDN`)"))
+	$(eval FREEIPA_EJABBER_LDAP_BASE := $(shell echo  "dc=$(FREEIPA_SLD),dc=$(FREEIPA_TLD))"))
 	echo $(FREEIPA_EJABBER_LDAP_BASE) > FREEIPA_EJABBER_LDAP_BASE
-	$(eval FREEIPA_EJABBER_LDAP_ROOTDN := $(shell echo  "uid=ejabberd,cn=sysaccounts,cn=etc,dc=`cut -f2 -d'.' FREEIPA_FQDN`,dc=`cut -f3 -d'.' FREEIPA_FQDN`)"))
+	$(eval FREEIPA_EJABBER_LDAP_ROOTDN := $(shell echo  "uid=ejabberd,cn=sysaccounts,cn=etc,dc=$(FREEIPA_SLD),dc=$(FREEIPA_TLD))"))
 	echo $(FREEIPA_EJABBER_LDAP_ROOTDN) > FREEIPA_EJABBER_LDAP_ROOTDN
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
+	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_MASTER_PASS
+	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_LDAP_PASS
 
 
 ejabberdCID:
@@ -270,3 +278,24 @@ registerJabberReplicant:
 	docker exec `cat ejabberdCID` ejabberdctl join_cluster 'ejabberd@$(FREEIPA_EJABBER_CLUSTER_PARENT)'
 
 replicant: replica
+
+cert:
+	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
+	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
+	@while [ -z "$$EMAIL" ]; do \
+		read -r -p "Enter the contact email you wish to associate with $(FREEIPA_FQDN) [EMAIL]: " EMAIL; echo "$$EMAIL" > $(TMP)/EMAIL; \
+	done ;
+	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
+	docker run -it --rm -p 443:443 -p 80:80 --name certbot \
+	-v "$(FREEIPA_DATADIR)/etc/letsencrypt:/etc/letsencrypt" \
+	-v "$(FREEIPA_DATADIR)/var/lib/letsencrypt:/var/lib/letsencrypt" \
+	quay.io/letsencrypt/letsencrypt:latest auth --standalone -n -d "$(FREEIPA_FQDN)" --agree-tos --email "`cat $(TMP)/EMAIL`"
+	rm -Rf $(TMP)
+
+renew:
+	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
+	docker run -it --rm -p 443:443 -p 80:80 --name certbot \
+	-v "$(FREEIPA_DATADIR)/etc/letsencrypt:/etc/letsencrypt" \
+	-v "$(FREEIPA_DATADIR)/var/lib/letsencrypt:/var/lib/letsencrypt" \
+	quay.io/letsencrypt/letsencrypt:latest renew
+
