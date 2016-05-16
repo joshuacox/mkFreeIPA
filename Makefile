@@ -230,7 +230,7 @@ ejabberdCID:
 	$(eval IPA_SERVER_IP := $(shell cat IPA_SERVER_IP))
 	docker run -d \
 	--name "ejabberd" \
-	--cidfile="ejabbderdCID" \
+	--cidfile="ejabberdCID" \
 	-p 5222:5222 \
 	-p 5269:5269 \
 	--restart=always \
