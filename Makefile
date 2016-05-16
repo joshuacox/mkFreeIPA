@@ -35,6 +35,7 @@ replicaCID:
 	-h $(FREEIPA_FQDN) \
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 	-v $(FREEIPA_DATADIR):/data:Z \
+	-v `pwd`jabber.ldif:/root/jabber.ldif \
 	-t $(TAG)
 	docker ps -ql >replicaCID
 
@@ -75,6 +76,7 @@ freeipaCID:
 	-h $(FREEIPA_FQDN) \
 	-e PASSWORD=$(FREEIPA_MASTER_PASS) \
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+	-v `pwd`jabber.ldif:/root/jabber.ldif \
 	-v $(FREEIPA_DATADIR):/data:Z \
 	-t $(TAG)
 
@@ -187,7 +189,7 @@ entropy:
 
 auto: config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS cert runtempCID entropy templogs
 
-config: configinit configcarry
+config: configinit configcarry jabber.ldif
 
 configinit:
 	cp -i TAG.example TAG
@@ -318,3 +320,6 @@ pull:
 	docker pull -t $(TAG)
 	docker pull quay.io/letsencrypt/letsencrypt:latest
 	docker pull rroemhild/ejabberd
+
+jabber.ldif:
+	/bin/bash ./jabberconf.sh
