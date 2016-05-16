@@ -18,7 +18,7 @@ prod: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
 
 jabber: prod FREEIPA_DOMAIN FREEIPA_EJABBER_LDAP_ROOTDN FREEIPA_EJABBER_LDAP_UID FREEIPA_EJABBER_LDAP_FILTER FREEIPA_EJABBER_LDAP_BASE FREEIPA_EJABBER_LDAP_PASS ejabberdCID
 
-replica: NAME TAG FREEIPA_EJABBER_CLUSTER_PARENT replicaCID ejabberdCID registerJabberReplicant
+replica: NAME TAG FREEIPA_EJABBER_CLUSTER_PARENT replicaCID 
 
 replicaCID:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
@@ -86,11 +86,14 @@ freeipaCID:
 
 kill:
 	-@docker kill `cat freeipaCID`
+	-@docker kill `cat replicaCID`
 	-@docker kill `cat ejabberdCID`
 
 rm-image:
 	-@docker rm `cat freeipaCID`
 	-@rm freeipaCID
+	-@docker rm `cat replicaCID`
+	-@rm replicaCID
 	-@docker rm `cat ejabberdCID`
 	-@rm ejabberdCID
 
