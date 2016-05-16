@@ -290,11 +290,11 @@ renew:
 
 clean:
 	rm -i FREEIPA_*
-	rm -i IPA_SERVER_IP
+	rm -i IPA_SERVER_*
 
 hardclean:
 	rm  FREEIPA_*
-	rm  IPA_SERVER_IP
+	rm  IPA_SERVER_*
 
 updateUbuntuTrusty:
 	apt-get update -y
