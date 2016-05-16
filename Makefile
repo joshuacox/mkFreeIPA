@@ -1,4 +1,4 @@
-.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs example temp prod pull
+.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs example temp prod pull config
 
 all: help
 
@@ -45,10 +45,12 @@ runtempCID:
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	$(eval IPA_SERVER_IP := $(shell cat IPA_SERVER_IP))
+	$(eval IPA_SERVER_INSTALL_OPTS := $(shell cat IPA_SERVER_INSTALL_OPTS))
 	@docker run --name=$(NAME) \
 	--cidfile="runtempCID" \
 	-d \
 	-e IPA_SERVER_IP=$(IPA_SERVER_IP) \
+	-e IPA_SERVER_INSTALL_OPTS="$(IPA_SERVER_INSTALL_OPTS)" \
 	-p 53:53/udp -p 53:53 \
 	-p 80:80 -p 443:443 -p 389:389 -p 636:636 -p 88:88 -p 464:464 \
 	-p 88:88/udp -p 464:464/udp -p 123:123/udp -p 7389:7389 \
