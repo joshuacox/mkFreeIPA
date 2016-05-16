@@ -3,9 +3,27 @@ Make a persistent FreeIPA docker container PDQ
 
 
 ### Usage
+
+`make auto`  will automatically attempt to configure your IPA server and fire up the temporary instance
+
+or you can walk through the prompts and manually answer some questions
+
 `make temp` will make a temporary ephemeral instance that we can grab the initial directory structure from
 
-watch the logs and wait for FreeIPA to finish installing, `make entropy` can speed this process up tremendously by supplying some extra entropy
+in either case watch the logs and wait for FreeIPA to finish installing, `make entropy` can speed this process up tremendously by supplying some extra entropy
+
+there are a few errors about symlinks that can be ignored for now
+
+```
+These files are required to create replicas. The password for these                                                                         │··················
+files is the Directory Manager password                                                                                                     │··················
+Created symlink from /etc/systemd/system/container-ipa.target.wants/ipa-server-update-self-ip-address.service to /usr/lib/systemd/system/ipa│··················
+-server-update-self-ip-address.service.                                                                                                     │··················
+Created symlink from /etc/systemd/system/container-ipa.target.wants/ipa-server-upgrade.service to /usr/lib/systemd/system/ipa-server-upgrade│··················
+.service.                                                                                                                                   │··················
+Failed to execute operation: Too many levels of symbolic links                                                                              │··················
+FreeIPA server configured.  
+```
 
 when this finishes (not before) you can then
 `make grab` which will grab those directories for you once FreeIPA has finished installing
