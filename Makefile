@@ -333,9 +333,9 @@ portal/jabber.ldif:
 registerJabberServer:
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
-	docker exec -i -t `cat freeipaCID` /bin/bash -c 'echo "$(FREEIPA_MASTER_PASS)"|kinit admin'
-	docker exec -i -t `cat freeipaCID` ipa group-add jabber_users --desc="Group used to validate Jabber authentication to allowed users"
-	docker exec -i -t `cat freeipaCID` ldapmodify -h $(FREEIPA_FQDN) -p 389 -x -D "cn=Directory Manager" -w $(FREEIPA_MASTER_PASS) -f /root/portal/jabber.ldif
+	-@docker exec -i -t `cat freeipaCID` /bin/bash -c 'echo "$(FREEIPA_MASTER_PASS)"|kinit admin'
+	-@docker exec -i -t `cat freeipaCID` ipa group-add jabber_users --desc="Group used to validate Jabber authentication to allowed users"
+	-@docker exec -i -t `cat freeipaCID` ldapmodify -h $(FREEIPA_FQDN) -p 389 -x -D "cn=Directory Manager" -w $(FREEIPA_MASTER_PASS) -f /root/portal/jabber.ldif
 
 host.pem:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
@@ -353,10 +353,19 @@ nextmeat:
 
 jabberinit: registerJabberServer
 
-prepareReplica:
+prepareMasterForReplica:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	@while [ -z "$$REPLICANT_HOSTNAME" ]; do \
 		read -r -p "Enter the replicant hostname you wish to associate with $(FREEIPA_FQDN) [REPLICANT_HOSTNAME]: " REPLICANT_HOSTNAME; echo "$$REPLICANT_HOSTNAME" > $(TMP)/REPLICANT_HOSTNAME; dig $$REPLICANT_HOSTNAME +short > $(TMP)/REPLICANT_IP; \
 	done ;
 	docker exec -i -t `cat freeipaCID` ipa-replica-prepare `cat $(TMP)/REPLICANT_HOSTNAME` --ip-address `cat $(TMP)/REPLICANT_IP`
 	docker cp `cat freeipaCID`:/var/lib/ipa/replica-info-`cat $(TMP)/REPLICANT_HOSTNAME`.gpg - |sudo tar -pxvf -
+
+prepareReplica:
+	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
+	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
+	-@rm -Rf $(FREEIPA_DATADIR)/data
+	-@mkdir -p $(FREEIPA_DATADIR)/data
+	-@cp *.gpg  $(FREEIPA_DATADIR)/data/
+	-@echo "--password=$(FREEIPA_MASTER_PASS)" > $(FREEIPA_DATADIR)/data/ipa-replica-install-options
+	-@echo "--admin-password=$(FREEIPA_MASTER_PASS)" >> $(FREEIPA_DATADIR)/data/ipa-replica-install-options
