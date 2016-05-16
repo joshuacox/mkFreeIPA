@@ -232,7 +232,7 @@ ejabberdCID:
 	-p 5280:5280 \
 	-p 5443:5443 \
 	-h $(FREEIPA_FQDN) \
-	-e "XMPP_DOMAIN=$(FREEIPA_DOMAIN) \
+	-e "XMPP_DOMAIN=$(FREEIPA_DOMAIN)" \
 	-e "ERLANG_NODE=ejabberd" \
 	-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
 	-e "TZ=America/Chicago" \
