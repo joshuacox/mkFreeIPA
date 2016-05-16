@@ -323,3 +323,8 @@ pull:
 
 jabber.ldif:
 	/bin/bash ./jabberconf.sh
+
+registerJabberServer:
+	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
+	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
+	docker exec -i -t `cat freeipaCID` ldapmodify -h $(FREEIPA_FQDN) -p 389 -x -D "cn=Directory Manager" -w $(FREEIPA_MASTER_PASS) -f /root/jabber.ldif
