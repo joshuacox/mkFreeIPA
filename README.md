@@ -4,7 +4,21 @@ Make a persistent FreeIPA docker container PDQ
 
 ### Usage
 
+##### TLDR do it for me!
+
 `make auto`  will automatically attempt to configure your IPA server and fire up the temporary instance
+
+wait for
+
+```
+FreeIPA server configured.  
+```
+
+then `make next` when that finishes `make jabberinit` then you can `make jabber`
+
+you now have a full single sign on solution and an ejabberd server to test it out (assuming all went well, if not `make rm` and `make hardclean` and try manually below)
+
+#### Manual Install
 
 or you can walk through the prompts and manually answer some questions
 
