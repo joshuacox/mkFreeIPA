@@ -193,7 +193,7 @@ config: configinit configcarry
 configinit:
 	cp -i TAG.example TAG
 	curl icanhazip.com > IPA_SERVER_IP
-	dig -x `cat IPA_SERVER_IP` +short | sed 's/\.$//' > FREEIPA_FQDN
+	REPLACE="s%\.\$%%"dig -x `cat IPA_SERVER_IP` +short | sed $(REPLACE) > FREEIPA_FQDN
 	cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
 	cut -f2 -d'.' FREEIPA_FQDN > FREEIPA_SLD
 	cut -f3 -d'.' FREEIPA_FQDN > FREEIPA_TLD
