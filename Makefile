@@ -198,12 +198,14 @@ configinit:
 	cut -f2 -d'.' FREEIPA_FQDN > FREEIPA_SLD
 	cut -f3 -d'.' FREEIPA_FQDN > FREEIPA_TLD
 	echo 'uid' >FREEIPA_EJABBER_LDAP_UID
+	echo 'init finished'
 
 configcarry:
 	$(eval FREEIPA_DOMAIN := $(shell cat FREEIPA_DOMAIN))
 	$(eval FREEIPA_TLD := $(shell cat FREEIPA_TLD))
 	$(eval FREEIPA_SLD := $(shell cat FREEIPA_SLD))
-	$(eval FREEIPA_EJABBER_LDAP_FILTER := $(shell echo  "(memberOf=cn=jabber_users,cn=groups,cn=accounts,dc=$(FREEIPA_SLD),dc=$(FREEIPA_TLD))"))
+	echo 'firs parens'
+	$(eval FREEIPA_EJABBER_LDAP_FILTER := $(shell echo  "\(memberOf=cn=jabber_users,cn=groups,cn=accounts,dc=$(FREEIPA_SLD),dc=$(FREEIPA_TLD)\)"))
 	echo $(FREEIPA_EJABBER_LDAP_FILTER) > FREEIPA_EJABBER_LDAP_FILTER
 	$(eval FREEIPA_EJABBER_LDAP_BASE := $(shell echo  "dc=$(FREEIPA_SLD),dc=$(FREEIPA_TLD))"))
 	echo $(FREEIPA_EJABBER_LDAP_BASE) > FREEIPA_EJABBER_LDAP_BASE
