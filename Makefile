@@ -318,3 +318,7 @@ updateUbuntuTrusty:
 	echo 'you should reboot this VM to get the new kernel'
 	#service docker start
 
+pull:
+	docker pull -t $(TAG)
+	docker pull quay.io/letsencrypt/letsencrypt:latest
+	docker pull rroemhild/ejabberd
