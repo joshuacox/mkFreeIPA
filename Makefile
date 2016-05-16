@@ -318,4 +318,5 @@ registerJabberServer:
 
 host.pem:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
+	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	cat $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem > host.pem
