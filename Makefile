@@ -213,7 +213,6 @@ configcarry:
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_MASTER_PASS
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_LDAP_PASS
 
-
 ejabberdCID:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
@@ -306,3 +305,14 @@ renew:
 clean:
 	rm -i FREEIPA_*
 	rm -i IPA_SERVER_IP
+
+updateUbuntuTrusty:
+	apt-get update -y
+	apt-get upgrade -y
+	apt-get install linux-generic-lts-vivid linux-headers-generic-lts-vivid
+	wget get.docker.com -O - | sh
+	service docker stop
+	echo 'DOCKER_OPTS="-s overlay"' >> /etc/default/docker
+	echo 'you should reboot this VM to get the new kernel'
+	#service docker start
+
