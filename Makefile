@@ -248,7 +248,7 @@ ejabberdCID:
 	-e "ERLANG_NODE=ejabberd" \
 	-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
 	-e "TZ=America/Chicago" \
-	-e "EJABBERD_ADMIN=admin@$(FREEIPA_DOMAIN)" \
+	-e "EJABBERD_ADMIN=ejabberd@$(FREEIPA_DOMAIN)" \
 	-e "EJABBERD_AUTH_METHOD=ldap" \
 	-e "EJABBERD_WEB_ADMIN_SSL=true" \
 	-e "EJABBERD_STARTTLS=true" \
