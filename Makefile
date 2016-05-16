@@ -57,6 +57,7 @@ runtempCID:
 	-p 9443:9443 -p 9444:9444 -p 9445:9445 \
 	-h $(FREEIPA_FQDN) \
 	-e PASSWORD=$(FREEIPA_MASTER_PASS) \
+	-v `pwd`/portal/:/root/portal \
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 	-t $(TAG)
 
