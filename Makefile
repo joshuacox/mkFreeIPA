@@ -84,10 +84,13 @@ freeipaCID:
 
 kill:
 	-@docker kill `cat freeipaCID`
+	-@docker kill `cat ejabberdCID`
 
 rm-image:
 	-@docker rm `cat freeipaCID`
 	-@rm freeipaCID
+	-@docker rm `cat ejabberdCID`
+	-@rm ejabberdCID
 
 rmtemp:
 	-@docker kill `cat runtempCID`
