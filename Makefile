@@ -297,15 +297,11 @@ renewmeat:
 	-v "$(FREEIPA_DATADIR)/var/lib/letsencrypt:/var/lib/letsencrypt" \
 	quay.io/letsencrypt/letsencrypt:latest renew
 
-clean:
-	rm -i FREEIPA_*
-	rm -i IPA_SERVER_*
-	rm -iR portal
-
 hardclean:
 	rm  FREEIPA_*
 	rm  IPA_SERVER_*
 	rm -Rf portal
+	rm host.pem
 
 updateUbuntuTrusty:
 	apt-get update -y
