@@ -256,24 +256,7 @@ ejabberdCID:
 	-v "/exports/whc-ejabberd/ssl:/opt/ejabberd/ssl" \
 	rroemhild/ejabberd
 
- # View the docs here https://github.com/rroemhild/docker-ejabberd#cluster-example
- # This is a local copy for quick reference of the main values
-	# -e "EJABBERD_ADMIN_RANDPWD=true" \
-	# -v "/exports/whc-ejabberd/database:/opt/ejabberd/database" \
-	# -v "/exports/whc-ejabberd/conf:/opt/ejabberd/conf" \
-	#EJABBERD_LDAP_SERVERS: List of IP addresses or DNS names of your LDAP servers. This option is required.
-	#EJABBERD_LDAP_ENCRYPT: The value tls enables encryption by using LDAP over SSL. The default value is: none.
-	#EJABBERD_LDAP_TLS_VERIFY: false|soft|hard This option specifies whether to verify LDAP server certificate or not when TLS is enabled. The default is false which means no checks are performed.
-	#EJABBERD_LDAP_TLS_CACERTFILE: Path to file containing PEM encoded CA certificates.
-	#EJABBERD_LDAP_TLS_DEPTH: Specifies the maximum verification depth when TLS verification is enabled. The default value is 1.
-	#EJABBERD_LDAP_PORT: The default port is 389 if encryption is disabled; and 636 if encryption is enabled.
-	#EJABBERD_LDAP_ROOTDN: Bind DN. The default value is "" which means ‘anonymous connection’.
-	#EJABBERD_LDAP_PASSWORD: Bind password. The default value is "".
-	#EJABBERD_LDAP_DEREF_ALIASES: never|always|finding|searching Whether or not to dereference aliases. The default is never.
-	#EJABBERD_LDAP_BASE: LDAP base directory which stores users accounts. This option is required.
-	#EJABBERD_LDAP_UIDS: ldap_uidattr:ldap_uidattr_format The default attributes are uid:%u.
-	#EJABBERD_LDAP_FILTER: RFC 4515 LDAP filter. The default Filter value is undefined.
-	#EJABBERD_LDAP_DN_FILTER: { Filter: FilterAttrs } This filter is applied on the results returned by the main filter. By default ldap_dn_filter is undefined.
+ # For ejabberd view the docs here https://github.com/rroemhild/docker-ejabberd#cluster-example
 
 cookie:
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
