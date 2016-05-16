@@ -260,7 +260,7 @@ ejabberdCID:
 	-e "EJABBERD_LDAP_BASE=$(FREEIPA_EJABBER_LDAP_BASE)" \
 	-e "EJABBERD_LDAP_FILTER=$(FREEIPA_EJABBER_LDAP_FILTER)" \
 	-e "EJABBERD_LDAP_UIDS=$(FREEIPA_EJABBER_LDAP_UID)" \
-	-v "$(FREEIPA_DATADIR)/data/etc/letsencrypt/live/$(FREEIPA_FQDN):/opt/ejabberd/ssl:ro" \
+	-v "$(FREEIPA_DATADIR)/data/etc/letsencrypt/live/$(FREEIPA_FQDN):/opt/ejabberd/ssl" \
 	rroemhild/ejabberd
 
  # For ejabberd view the docs here https://github.com/rroemhild/docker-ejabberd#cluster-example
