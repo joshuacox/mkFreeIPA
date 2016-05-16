@@ -94,9 +94,6 @@ rm: kill rm-image
 
 clean: rmall
 
-pull:
-	docker pull `cat TAG`
-
 enter:
 	docker exec -i -t `cat freeipaCID` /bin/bash
 
@@ -188,7 +185,7 @@ example:
 entropy:
 	docker run --privileged -d joshuacox/havegedocker:latest
 
-auto: config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS cert runtempCID entropy
+auto: config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS cert runtempCID entropy templogs
 
 config: configinit configcarry
 
@@ -202,7 +199,6 @@ configinit:
 	echo 'uid' >FREEIPA_EJABBER_LDAP_UID
 
 configcarry:
-	echo 'carry'
 	$(eval FREEIPA_DOMAIN := $(shell cat FREEIPA_DOMAIN))
 	$(eval FREEIPA_TLD := $(shell cat FREEIPA_TLD))
 	$(eval FREEIPA_SLD := $(shell cat FREEIPA_SLD))
