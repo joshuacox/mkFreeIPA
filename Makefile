@@ -364,8 +364,8 @@ prepareMasterForReplica:
 prepareReplica:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
-	-@rm -Rf $(FREEIPA_DATADIR)/data
-	-@mkdir -p $(FREEIPA_DATADIR)/data
-	-@cp *.gpg  $(FREEIPA_DATADIR)/data/
-	-@echo "--password=$(FREEIPA_MASTER_PASS)" > $(FREEIPA_DATADIR)/data/ipa-replica-install-options
-	-@echo "--admin-password=$(FREEIPA_MASTER_PASS)" >> $(FREEIPA_DATADIR)/data/ipa-replica-install-options
+	-@rm -Rf $(FREEIPA_DATADIR)
+	-@mkdir -p $(FREEIPA_DATADIR)
+	-@cp *.gpg  $(FREEIPA_DATADIR)/
+	-@echo "--password=$(FREEIPA_MASTER_PASS)" > $(FREEIPA_DATADIR)/ipa-replica-install-options
+	-@echo "--admin-password=$(FREEIPA_MASTER_PASS)" >> $(FREEIPA_DATADIR)/ipa-replica-install-options
