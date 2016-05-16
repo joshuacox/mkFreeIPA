@@ -325,7 +325,7 @@ portal/jabber.ldif:
 registerJabberServer:
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
-	docker exec -i -t `cat freeipaCID` echo "$FREEIPA_MASTER_PASS"|kinit admin
+	docker exec -i -t `cat freeipaCID` /bin/bash -c 'echo "$FREEIPA_MASTER_PASS"|kinit admin'
 	docker exec -i -t `cat freeipaCID` ipa group-add jabber_users --desc="Group used to validate Jabber authentication to allowed users"
 	docker exec -i -t `cat freeipaCID` ldapmodify -h $(FREEIPA_FQDN) -p 389 -x -D "cn=Directory Manager" -w $(FREEIPA_MASTER_PASS) -f /root/portal/jabber.ldif
 
