@@ -8,7 +8,7 @@ Make a persistent FreeIPA docker container PDQ
 watch the logs and wait for FreeIPA to finish installing, `make entropy` can speed this process up tremendously by supplying some extra entropy
 
 when this finishes (not before) you can then
-`make grab` will grab those directories for you once FreeIPA has finished installing
+`make grab` which will grab those directories for you once FreeIPA has finished installing
 grab will make a `datadir` in the current directory and copy `/data` out
 of the temporary container to be used in a persistent setup
 
