@@ -361,18 +361,18 @@ prepareMasterForReplica:
 	docker exec -i -t `cat freeipaCID` ipa-replica-prepare `cat $(TMP)/REPLICANT_HOSTNAME` --ip-address `cat $(TMP)/REPLICANT_IP`
 	docker cp `cat freeipaCID`:/var/lib/ipa/replica-info-`cat $(TMP)/REPLICANT_HOSTNAME`.gpg - |sudo tar -pxvf -
 
-prepareReplica:
+prepareReplica: config prepareReplicaMeat
+
+prepareReplicaMeat:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
-	curl icanhazip.com > IPA_SERVER_IP
-	/bin/bash ./config.sh
-	cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
-	cut -f2 -d'.' FREEIPA_FQDN > FREEIPA_SLD
-	cut -f3 -d'.' FREEIPA_FQDN > FREEIPA_TLD
-	echo 'uid' >FREEIPA_EJABBER_LDAP_UID
 	-@rm -Rf $(FREEIPA_DATADIR)
 	-@mkdir -p $(FREEIPA_DATADIR)
 	-@cp *.gpg  $(FREEIPA_DATADIR)/
 	-@echo "--password=$(FREEIPA_MASTER_PASS)" > $(FREEIPA_DATADIR)/ipa-replica-install-options
 	-@echo "--admin-password=$(FREEIPA_MASTER_PASS)" >> $(FREEIPA_DATADIR)/ipa-replica-install-options
 	-@echo "--forwarder=8.8.8.8" >> $(FREEIPA_DATADIR)/ipa-replica-install-options
+	-@rm FREEIPA_EJABBER_ERLANG_COOKIE
+	-@rm FREEIPA_MASTER_PASS
+	-@rm FREEIPA_EJABBER_LDAP_PASS
+	-@echo you need to copy FREEIPA_EJABBER_ERLANG_COOKIE FREEIPA_MASTER_PASS FREEIPA_EJABBER_LDAP_PASS from the parent server
