@@ -260,7 +260,7 @@ ejabberdCID:
 	-e "EJABBERD_LDAP_BASE=$(FREEIPA_EJABBER_LDAP_BASE)" \
 	-e "EJABBERD_LDAP_FILTER=$(FREEIPA_EJABBER_LDAP_FILTER)" \
 	-e "EJABBERD_LDAP_UIDS=$(FREEIPA_EJABBER_LDAP_UID)" \
-	-v "`pwd`/host.pem:/opt/ejabberd/ssl/host.pem:ro" \
+	-v "$(FREEIPA_DATADIR)/data/etc/letsencrypt/live/$(FREEIPA_FQDN):/opt/ejabberd/ssl:ro" \
 	rroemhild/ejabberd
 
  # For ejabberd view the docs here https://github.com/rroemhild/docker-ejabberd#cluster-example
@@ -286,7 +286,10 @@ cert:
 	quay.io/letsencrypt/letsencrypt:latest auth --standalone -n -d "$(FREEIPA_FQDN)" --agree-tos --email "`cat $(TMP)/EMAIL`"
 	rm -Rf $(TMP)
 
-renew:
+renew: renewmeat host.pem
+
+renewmeat:
+	rm host.pem
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	docker run -it --rm -p 443:443 -p 80:80 --name certbot \
 	-v "$(FREEIPA_DATADIR)/etc/letsencrypt:/etc/letsencrypt" \
@@ -329,3 +332,14 @@ host.pem:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	cat $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem > host.pem
+	cp -i host.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/
+
+next: rmtemp grab nextmeat cert prod
+
+nextmeat:
+	mkdir -p /exports/freeipa
+	rm -Rf /exports/freeipa/datadir
+	mv datadir /exports/freeipa/
+	echo '/exports/freeipa/datadir/data' > FREEIPA_DATADIR
+
+jabberinit: registerJabberServer
