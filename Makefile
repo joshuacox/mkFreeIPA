@@ -338,7 +338,7 @@ host.pem:
 	cat $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem > host.pem
 	cp -i host.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/
 
-next: rmtemp grab nextmeat cert prod
+next: grab rmtemp nextmeat cert prod
 
 nextmeat:
 	mkdir -p /exports/freeipa
