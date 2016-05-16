@@ -35,7 +35,7 @@ replicaCID:
 	-h $(FREEIPA_FQDN) \
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 	-v $(FREEIPA_DATADIR):/data:Z \
-	-v `pwd`jabber.ldif:/root/jabber.ldif \
+	-v `pwd`/jabber.ldif:/root/jabber.ldif \
 	-t $(TAG)
 	docker ps -ql >replicaCID
 
