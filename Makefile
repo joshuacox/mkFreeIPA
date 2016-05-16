@@ -257,6 +257,7 @@ ejabberdCID:
 	--restart=always \
 	-p 5280:5280 \
 	-p 5443:5443 \
+	-p 4369:4369 \
 	-h $(FREEIPA_FQDN) \
 	-e "XMPP_DOMAIN=$(FREEIPA_DOMAIN)" \
 	-e "ERLANG_NODE=ejabberd" \
