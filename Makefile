@@ -188,14 +188,18 @@ example:
 entropy:
 	docker run --privileged -d joshuacox/havegedocker:latest
 
-config:
+config: configinit configcarry
+
+configinit:
 	cp -i TAG.example TAG
 	curl icanhazip.com > IPA_SERVER_IP
-	dig -x `cat IPA_SERVER_IP` +short > FREEIPA_FQDN
+	dig -x `cat IPA_SERVER_IP` +short | sed 's/\.$//' > FREEIPA_FQDN
 	cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
 	cut -f2 -d'.' FREEIPA_FQDN > FREEIPA_SLD
 	cut -f3 -d'.' FREEIPA_FQDN > FREEIPA_TLD
 	echo 'uid' >FREEIPA_EJABBER_LDAP_UID
+
+configcarry:
 	$(eval FREEIPA_DOMAIN := $(shell cat FREEIPA_DOMAIN))
 	$(eval FREEIPA_TLD := $(shell cat FREEIPA_TLD))
 	$(eval FREEIPA_SLD := $(shell cat FREEIPA_SLD))
