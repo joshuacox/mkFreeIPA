@@ -117,6 +117,9 @@ logs:
 templogs:
 	docker logs -f `cat runtempCID`
 
+jabberlogs:
+	docker logs -f `cat ejabberdCID`
+
 NAME:
 	@while [ -z "$$NAME" ]; do \
 		read -r -p "Enter the name you wish to associate with this container [NAME]: " NAME; echo "$$NAME">>NAME; cat NAME; \
