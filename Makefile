@@ -203,7 +203,7 @@ entropy: entropyCID
 
 entropyCID:
 	docker run --privileged \
-	--cidfile="ejabberdCID" \
+	--cidfile="entropyCID" \
 	-d \
 	joshuacox/havegedocker:latest
 
