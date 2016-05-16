@@ -101,6 +101,11 @@ rmtemp:
 
 rm: kill rm-image
 
+rmjabber:
+	-@docker kill `cat ejabberdCID`
+	-@docker rm `cat ejabberdCID`
+	-@rm ejabberdCID
+
 clean: rmall
 
 enter:
