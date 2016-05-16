@@ -1,4 +1,4 @@
-.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs example temp prod pull config
+.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs example temp prod pull config passwords
 
 all: help
 
@@ -207,7 +207,7 @@ entropyCID:
 	-d \
 	joshuacox/havegedocker:latest
 
-auto: config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy templogs
+auto: config passwords TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy templogs
 
 config: configinit configcarry portal/jabber.ldif
 
@@ -225,6 +225,8 @@ configcarry:
 	$(eval FREEIPA_TLD := $(shell cat FREEIPA_TLD))
 	$(eval FREEIPA_SLD := $(shell cat FREEIPA_SLD))
 	/bin/bash ./carry.sh
+
+passwords:
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_MASTER_PASS
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_LDAP_PASS
@@ -364,6 +366,7 @@ prepareMasterForReplica:
 prepareReplica: config prepareReplicaMeat
 
 prepareReplicaMeat:
+	-@echo you need to copy FREEIPA_EJABBER_ERLANG_COOKIE FREEIPA_MASTER_PASS FREEIPA_EJABBER_LDAP_PASS from the parent server
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
 	-@rm -Rf $(FREEIPA_DATADIR)
@@ -372,7 +375,3 @@ prepareReplicaMeat:
 	-@echo "--password=$(FREEIPA_MASTER_PASS)" > $(FREEIPA_DATADIR)/ipa-replica-install-options
 	-@echo "--admin-password=$(FREEIPA_MASTER_PASS)" >> $(FREEIPA_DATADIR)/ipa-replica-install-options
 	-@echo "--forwarder=8.8.8.8" >> $(FREEIPA_DATADIR)/ipa-replica-install-options
-	-@rm FREEIPA_EJABBER_ERLANG_COOKIE
-	-@rm FREEIPA_MASTER_PASS
-	-@rm FREEIPA_EJABBER_LDAP_PASS
-	-@echo you need to copy FREEIPA_EJABBER_ERLANG_COOKIE FREEIPA_MASTER_PASS FREEIPA_EJABBER_LDAP_PASS from the parent server
