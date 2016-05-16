@@ -303,3 +303,6 @@ renew:
 	-v "$(FREEIPA_DATADIR)/var/lib/letsencrypt:/var/lib/letsencrypt" \
 	quay.io/letsencrypt/letsencrypt:latest renew
 
+clean:
+	rm -i FREEIPA_*
+	rm -i IPA_SERVER_IP
