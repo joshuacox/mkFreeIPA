@@ -80,6 +80,7 @@ freeipaCID:
 	-e PASSWORD=$(FREEIPA_MASTER_PASS) \
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 	-v `pwd`jabber.ldif:/root/jabber.ldif \
+	-v `pwd`/portal/:/root/portal \
 	-v $(FREEIPA_DATADIR):/data:Z \
 	-t $(TAG)
 
