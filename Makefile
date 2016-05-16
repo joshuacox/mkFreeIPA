@@ -16,7 +16,7 @@ temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID templog
 # after letting temp settle you can `make grab` and grab the data directory for persistence
 prod: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
 
-jabber: prod FREEIPA_DOMAIN FREEIPA_EJABBER_LDAP_ROOTDN FREEIPA_EJABBER_LDAP_UID FREEIPA_EJABBER_LDAP_FILTER FREEIPA_EJABBER_LDAP_BASE FREEIPA_EJABBER_LDAP_PASS ejabberdCID
+jabber: prod FREEIPA_DOMAIN FREEIPA_EJABBER_LDAP_ROOTDN FREEIPA_EJABBER_LDAP_UID FREEIPA_EJABBER_LDAP_FILTER FREEIPA_EJABBER_LDAP_BASE FREEIPA_EJABBER_LDAP_PASS host.pem ejabberdCID
 
 replica: FREEIPA_EJABBER_CLUSTER_PARENT replicaCID ejabberdCID registerJabberReplicant
 
@@ -253,7 +253,6 @@ ejabberdCID:
 	-e "EJABBERD_LDAP_BASE=$(FREEIPA_EJABBER_LDAP_BASE)" \
 	-e "EJABBERD_LDAP_FILTER=$(FREEIPA_EJABBER_LDAP_FILTER)" \
 	-e "EJABBERD_LDAP_UIDS=$(FREEIPA_EJABBER_LDAP_UID)" \
-	-v "/exports/whc-ejabberd/ssl:/opt/ejabberd/ssl" \
 	rroemhild/ejabberd
 
  # For ejabberd view the docs here https://github.com/rroemhild/docker-ejabberd#cluster-example
@@ -316,3 +315,7 @@ registerJabberServer:
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
 	docker exec -i -t `cat freeipaCID` ldapmodify -h $(FREEIPA_FQDN) -p 389 -x -D "cn=Directory Manager" -w $(FREEIPA_MASTER_PASS) -f /root/jabber.ldif
+
+host.pem:
+	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
+	cat $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem > host.pem
