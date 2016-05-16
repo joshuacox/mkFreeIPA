@@ -286,6 +286,7 @@ cookie:
 registerJabberReplicant: FREEIPA_EJABBER_CLUSTER_PARENT registerJabberReplicantMeat
 
 registerJabberReplicantMeat:
+	$(eval FREEIPA_EJABBER_CLUSTER_PARENT := $(shell cat FREEIPA_EJABBER_CLUSTER_PARENT))
 	docker exec `cat ejabberdCID` ejabberdctl join_cluster 'ejabberd@$(FREEIPA_EJABBER_CLUSTER_PARENT)'
 
 replicant: replica
