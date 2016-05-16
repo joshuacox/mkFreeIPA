@@ -302,6 +302,10 @@ clean:
 	rm -i FREEIPA_*
 	rm -i IPA_SERVER_IP
 
+hardclean:
+	rm  FREEIPA_*
+	rm  IPA_SERVER_IP
+
 updateUbuntuTrusty:
 	apt-get update -y
 	apt-get upgrade -y
