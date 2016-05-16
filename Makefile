@@ -191,8 +191,13 @@ FREEIPA_MASTER_PASS:
 example:
 	cp -i TAG.example TAG
 
-entropy:
-	docker run --privileged -d joshuacox/havegedocker:latest
+entropy: entropyCID
+
+entropyCID:
+	docker run --privileged \
+	--cidfile="ejabberdCID" \
+	-d \
+	joshuacox/havegedocker:latest
 
 auto: config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy templogs
 
