@@ -35,7 +35,7 @@ replicaCID:
 	-h $(FREEIPA_FQDN) \
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 	-v $(FREEIPA_DATADIR):/data:Z \
-	-v `pwd`/jabber.ldif:/root/jabber.ldif \
+	-v `pwd`/portal/:/root/portal \
 	-t $(TAG)
 	docker ps -ql >replicaCID
 
@@ -194,7 +194,7 @@ entropy:
 
 auto: config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy templogs
 
-config: configinit configcarry jabber.ldif
+config: configinit configcarry portal/jabber.ldif
 
 configinit:
 	cp -i TAG.example TAG
@@ -309,13 +309,13 @@ pull:
 	docker pull quay.io/letsencrypt/letsencrypt:latest
 	docker pull rroemhild/ejabberd
 
-jabber.ldif:
+portal/jabber.ldif:
 	/bin/bash ./jabberconf.sh
 
 registerJabberServer:
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
-	docker exec -i -t `cat freeipaCID` ldapmodify -h $(FREEIPA_FQDN) -p 389 -x -D "cn=Directory Manager" -w $(FREEIPA_MASTER_PASS) -f /root/jabber.ldif
+	docker exec -i -t `cat freeipaCID` ldapmodify -h $(FREEIPA_FQDN) -p 389 -x -D "cn=Directory Manager" -w $(FREEIPA_MASTER_PASS) -f /root/portal/jabber.ldif
 
 host.pem:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
