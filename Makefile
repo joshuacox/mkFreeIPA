@@ -187,7 +187,7 @@ example:
 entropy:
 	docker run --privileged -d joshuacox/havegedocker:latest
 
-auto: config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS cert runtempCID entropy templogs
+auto: config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy templogs
 
 config: configinit configcarry jabber.ldif
 
