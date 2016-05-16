@@ -18,7 +18,7 @@ prod: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
 
 jabber: prod FREEIPA_DOMAIN FREEIPA_EJABBER_LDAP_ROOTDN FREEIPA_EJABBER_LDAP_UID FREEIPA_EJABBER_LDAP_FILTER FREEIPA_EJABBER_LDAP_BASE FREEIPA_EJABBER_LDAP_PASS ejabberdCID
 
-replica: FREEIPA_EJABBER_CLUSTER_PARENT replicaCID ejabberdCID registerJabberReplicant
+replica: NAME TAG FREEIPA_EJABBER_CLUSTER_PARENT replicaCID ejabberdCID registerJabberReplicant
 
 replicaCID:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
@@ -364,6 +364,12 @@ prepareMasterForReplica:
 prepareReplica:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
+	curl icanhazip.com > IPA_SERVER_IP
+	/bin/bash ./config.sh
+	cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
+	cut -f2 -d'.' FREEIPA_FQDN > FREEIPA_SLD
+	cut -f3 -d'.' FREEIPA_FQDN > FREEIPA_TLD
+	echo 'uid' >FREEIPA_EJABBER_LDAP_UID
 	-@rm -Rf $(FREEIPA_DATADIR)
 	-@mkdir -p $(FREEIPA_DATADIR)
 	-@cp *.gpg  $(FREEIPA_DATADIR)/
