@@ -298,10 +298,10 @@ renewmeat:
 	quay.io/letsencrypt/letsencrypt:latest renew
 
 hardclean:
-	rm  FREEIPA_*
-	rm  IPA_SERVER_*
-	rm -Rf portal
-	rm host.pem
+	-rm  FREEIPA_*
+	-rm  IPA_SERVER_*
+	-rm -Rf portal
+	-rm host.pem
 
 updateUbuntuTrusty:
 	apt-get update -y
