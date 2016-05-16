@@ -188,6 +188,8 @@ example:
 entropy:
 	docker run --privileged -d joshuacox/havegedocker:latest
 
+auto: config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS cert runtempCID entropy
+
 config: configinit configcarry
 
 configinit:
