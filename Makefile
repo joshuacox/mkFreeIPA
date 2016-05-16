@@ -204,13 +204,7 @@ configcarry:
 	$(eval FREEIPA_DOMAIN := $(shell cat FREEIPA_DOMAIN))
 	$(eval FREEIPA_TLD := $(shell cat FREEIPA_TLD))
 	$(eval FREEIPA_SLD := $(shell cat FREEIPA_SLD))
-	echo 'firs parens'
-	$(eval FREEIPA_EJABBER_LDAP_FILTER := $(shell echo  \"\(memberOf=cn=jabber_users,cn=groups,cn=accounts,dc=$(FREEIPA_SLD),dc=$(FREEIPA_TLD)\)\"))
-	echo $(FREEIPA_EJABBER_LDAP_FILTER) > FREEIPA_EJABBER_LDAP_FILTER
-	$(eval FREEIPA_EJABBER_LDAP_BASE := $(shell echo  "dc=$(FREEIPA_SLD),dc=$(FREEIPA_TLD))"))
-	echo $(FREEIPA_EJABBER_LDAP_BASE) > FREEIPA_EJABBER_LDAP_BASE
-	$(eval FREEIPA_EJABBER_LDAP_ROOTDN := $(shell echo  "uid=ejabberd,cn=sysaccounts,cn=etc,dc=$(FREEIPA_SLD),dc=$(FREEIPA_TLD))"))
-	echo $(FREEIPA_EJABBER_LDAP_ROOTDN) > FREEIPA_EJABBER_LDAP_ROOTDN
+	/bin/bash ./carry.sh
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_MASTER_PASS
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_LDAP_PASS
