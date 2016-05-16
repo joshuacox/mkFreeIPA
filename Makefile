@@ -300,10 +300,12 @@ renewmeat:
 clean:
 	rm -i FREEIPA_*
 	rm -i IPA_SERVER_*
+	rm -iR portal
 
 hardclean:
 	rm  FREEIPA_*
 	rm  IPA_SERVER_*
+	rm -Rf portal
 
 updateUbuntuTrusty:
 	apt-get update -y
