@@ -359,4 +359,4 @@ prepareReplica:
 		read -r -p "Enter the replicant hostname you wish to associate with $(FREEIPA_FQDN) [REPLICANT_HOSTNAME]: " REPLICANT_HOSTNAME; echo "$$REPLICANT_HOSTNAME" > $(TMP)/REPLICANT_HOSTNAME; dig $$REPLICANT_HOSTNAME +short > $(TMP)/REPLICANT_IP; \
 	done ;
 	docker exec -i -t `cat freeipaCID` ipa-replica-prepare `cat $(TMP)/REPLICANT_HOSTNAME` --ip-address `cat $(TMP)/REPLICANT_IP`
-	docker cp `cat freeipaCID`:/var/lib/ipa/replica-info-replica.`cat $(TMP)/REPLICANT_HOSTNAME`.gpg - |sudo tar -pxvf -
+	docker cp `cat freeipaCID`:/var/lib/ipa/replica-info-`cat $(TMP)/REPLICANT_HOSTNAME`.gpg - |sudo tar -pxvf -
