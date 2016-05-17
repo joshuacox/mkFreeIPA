@@ -1,5 +1,5 @@
 # mkFreeIPA
-Make a persistent FreeIPA docker container PDQ
+Make a persistent FreeIPA docker container PDQ based on the awesome container by [adelton](https://github.com/adelton/docker-freeipa)
 
 
 ### Usage
