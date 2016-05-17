@@ -210,7 +210,7 @@ entropyCID:
 	-d \
 	joshuacox/havegedocker:latest
 
-auto: config passwords TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy templogs
+auto: passwords config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy templogs
 
 config: configinit configcarry portal/jabber.ldif
 
