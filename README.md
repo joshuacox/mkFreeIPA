@@ -2,6 +2,10 @@
 Make a persistent FreeIPA docker container PDQ based on the awesome container by [adelton](https://github.com/adelton/docker-freeipa)
 
 
+### Requirements
+
+you must setup reverse DNS first or freeIPA will not work!  then you can proceed
+
 ### Usage
 
 ##### TLDR do it for me!
