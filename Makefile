@@ -352,7 +352,7 @@ host.pem:
 	cat $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem > host.pem
 	cp -i host.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/
 
-next: grab rmtemp nextmeat prod
+next: grab rmtemp nextmeat prod displaycreds
 
 nextmeat:
 	mkdir -p /exports/freeipa
@@ -391,3 +391,9 @@ prepareReplicaMeat:
 
 prepCentOS7:
 	yum install -y bind-utils
+
+displaycreds:
+	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
+	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
+	-@echo "you should now login to your server at $(FREEIPA_FQDN) with user admin and pass=$(FREEIPA_MASTER_PASS)"
+
