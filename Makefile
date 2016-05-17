@@ -388,3 +388,6 @@ prepareReplicaMeat:
 	-@echo "--password=$(FREEIPA_MASTER_PASS)" > $(FREEIPA_DATADIR)/ipa-replica-install-options
 	-@echo "--admin-password=$(FREEIPA_MASTER_PASS)" >> $(FREEIPA_DATADIR)/ipa-replica-install-options
 	-@echo "--forwarder=8.8.8.8" >> $(FREEIPA_DATADIR)/ipa-replica-install-options
+
+prepCentOS7:
+	yum install -y bind-utils
