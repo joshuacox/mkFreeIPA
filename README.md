@@ -58,7 +58,7 @@ login to the FQDN you gave earlier as admin with the password you supplied, add 
 
 ### Ejabberd
 
-##### Warning this section is largely supplanted but `make jabberinit` and `make jabber` read on for historical purposes
+##### Warning this section is largely supplanted by `make jabberinit` and `make jabber` read on for historical purposes
 
 The freeIPA docs have an article [here](http://www.freeipa.org/page/EJabberd_Integration_with_FreeIPA_using_LDAP_Group_memberships)
 
