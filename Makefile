@@ -112,16 +112,16 @@ rmjabber:
 clean: rmall
 
 enter:
-	docker exec -i -t `cat freeipaCID` /bin/bash
+	@docker exec -i -t `cat freeipaCID` /bin/bash
 
 logs:
-	docker logs -f `cat freeipaCID`
+	@docker logs -f `cat freeipaCID`
 
 templogs:
-	docker logs -f `cat runtempCID`
+	@docker logs -f `cat runtempCID`
 
 jabberlogs:
-	docker logs -f `cat ejabberdCID`
+	@docker logs -f `cat ejabberdCID`
 
 NAME:
 	@while [ -z "$$NAME" ]; do \
@@ -139,8 +139,8 @@ grab: FREEIPA_DATADIR
 
 FREEIPA_DATADIR:
 	-mkdir -p datadir
-	docker cp `cat runtempCID`:/data  - |sudo tar -C datadir/ -pxvf -
-	echo `pwd`/datadir/data > FREEIPA_DATADIR
+	@docker cp `cat runtempCID`:/data  - |sudo tar -C datadir/ -pxvf -
+	@echo `pwd`/datadir/data > FREEIPA_DATADIR
 
 FREEIPA_FQDN:
 	@while [ -z "$$FREEIPA_FQDN" ]; do \
@@ -200,12 +200,12 @@ FREEIPA_MASTER_PASS:
 	echo ' '
 
 example:
-	cp -i TAG.example TAG
+	@cp -i TAG.example TAG
 
 entropy: entropyCID
 
 entropyCID:
-	docker run --privileged \
+	@docker run --privileged \
 	--cidfile="entropyCID" \
 	-d \
 	joshuacox/havegedocker:latest
@@ -215,25 +215,25 @@ auto: passwords config IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID
 config: configinit configcarry portal/jabber.ldif
 
 configinit:
-	cp TAG.example TAG
-	echo 'freeipa' > NAME
-	curl icanhazip.com > IPA_SERVER_IP
-	/bin/bash ./config.sh
-	cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
-	cut -f2 -d'.' FREEIPA_FQDN > FREEIPA_SLD
-	cut -f3 -d'.' FREEIPA_FQDN > FREEIPA_TLD
-	echo 'uid' >FREEIPA_EJABBER_LDAP_UID
+	@cp TAG.example TAG
+	@echo 'freeipa' > NAME
+	@curl icanhazip.com > IPA_SERVER_IP
+	@/bin/bash ./config.sh
+	@cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
+	@cut -f2 -d'.' FREEIPA_FQDN > FREEIPA_SLD
+	@cut -f3 -d'.' FREEIPA_FQDN > FREEIPA_TLD
+	@echo 'uid' >FREEIPA_EJABBER_LDAP_UID
 
 configcarry:
 	$(eval FREEIPA_DOMAIN := $(shell cat FREEIPA_DOMAIN))
 	$(eval FREEIPA_TLD := $(shell cat FREEIPA_TLD))
 	$(eval FREEIPA_SLD := $(shell cat FREEIPA_SLD))
-	/bin/bash ./carry.sh
+	@/bin/bash ./carry.sh
 
 passwords:
-	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
-	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_MASTER_PASS
-	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_LDAP_PASS
+	@tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
+	@tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_MASTER_PASS
+	@tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_LDAP_PASS
 
 ejabberdCID:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
@@ -284,13 +284,13 @@ ejabberdCID:
 	#-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
 
 cookie:
-	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
+	@tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
 
 registerJabberReplicant: FREEIPA_EJABBER_CLUSTER_PARENT registerJabberReplicantMeat
 
 registerJabberReplicantMeat:
 	$(eval FREEIPA_EJABBER_CLUSTER_PARENT := $(shell cat FREEIPA_EJABBER_CLUSTER_PARENT))
-	docker exec `cat ejabberdCID` ejabberdctl join_cluster 'ejabberd@$(FREEIPA_EJABBER_CLUSTER_PARENT)'
+	@docker exec `cat ejabberdCID` ejabberdctl join_cluster 'ejabberd@$(FREEIPA_EJABBER_CLUSTER_PARENT)'
 
 replicant: replica
 
@@ -357,10 +357,10 @@ host.pem:
 next: grab rmtemp nextmeat prod waitforport80 displaycreds
 
 nextmeat:
-	mkdir -p /exports/freeipa
-	rm -Rf /exports/freeipa/datadir
-	mv datadir /exports/freeipa/
-	echo '/exports/freeipa/datadir/data' > FREEIPA_DATADIR
+	@mkdir -p /exports/freeipa
+	@rm -Rf /exports/freeipa/datadir
+	@mv datadir /exports/freeipa/
+	@echo '/exports/freeipa/datadir/data' > FREEIPA_DATADIR
 
 jabberinit: registerJabberServer
 
