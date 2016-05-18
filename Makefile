@@ -403,3 +403,5 @@ waitforport80:
 	@echo "Waiting for port 80 to become available"
 	@while ! curl --output /dev/null --silent --head --fail http://localhost; do sleep 10 && echo -n .; done;
 	@echo "check port 80, it appears that now it is up!"
+
+wait: waitforport80
