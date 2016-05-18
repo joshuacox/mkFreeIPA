@@ -1,4 +1,4 @@
-.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs example temp prod pull config passwords waitforinit
+.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs example temp prod pull config passwords waitforport80
 
 all: help
 
@@ -11,7 +11,7 @@ help:
 	@echo ""   3. make prod   - run production container with persistent directories
 	@echo ""   4. make jabber - make a jabber container that connects to our new FreeIPA server
 
-temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID waitforinit templogs
+temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID waitforport80 templogs
 
 # after letting temp settle you can `make grab` and grab the data directory for persistence
 prod: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
@@ -210,7 +210,7 @@ entropyCID:
 	-d \
 	joshuacox/havegedocker:latest
 
-auto: passwords config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy waitforinit
+auto: passwords config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy waitforport80
 
 config: configinit configcarry portal/jabber.ldif
 
@@ -353,7 +353,7 @@ host.pem:
 	cat $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem > host.pem
 	cp -i host.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/
 
-next: grab rmtemp nextmeat prod waitforinit displaycreds
+next: grab rmtemp nextmeat prod waitforport80 displaycreds
 
 nextmeat:
 	mkdir -p /exports/freeipa
@@ -398,6 +398,7 @@ displaycreds:
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	-@echo "you should now login to your server at $(FREEIPA_FQDN) with user admin and pass=$(FREEIPA_MASTER_PASS)"
 
-waitforinit:
-	while ! curl --output /dev/null --silent --head --fail http://localhost; do sleep 10 && echo -n .; done;
+waitforport80:
+	echo "Waiting for port 80 to become available"
+	@while ! curl --output /dev/null --silent --head --fail http://localhost; do sleep 10 && echo -n .; done;
 	echo "check now"
