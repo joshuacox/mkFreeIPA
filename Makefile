@@ -1,4 +1,4 @@
-.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs example temp prod pull config passwords
+.PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs example temp prod pull config passwords waitforinit
 
 all: help
 
@@ -210,7 +210,7 @@ entropyCID:
 	-d \
 	joshuacox/havegedocker:latest
 
-auto: passwords config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy templogs
+auto: passwords config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy waitforinit
 
 config: configinit configcarry portal/jabber.ldif
 
@@ -397,3 +397,6 @@ displaycreds:
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	-@echo "you should now login to your server at $(FREEIPA_FQDN) with user admin and pass=$(FREEIPA_MASTER_PASS)"
 
+waitforinit:
+	while ! curl --output /dev/null --silent --head --fail http://localhost; do sleep 10 && echo -n .; done;
+	echo "check now"
