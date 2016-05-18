@@ -11,7 +11,7 @@ help:
 	@echo ""   3. make prod   - run production container with persistent directories
 	@echo ""   4. make jabber - make a jabber container that connects to our new FreeIPA server
 
-temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID templogs
+temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID waitforinit templogs
 
 # after letting temp settle you can `make grab` and grab the data directory for persistence
 prod: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
@@ -275,6 +275,7 @@ ejabberdCID:
 	-e "EJABBERD_LDAP_BASE=$(FREEIPA_EJABBER_LDAP_BASE)" \
 	-e "EJABBERD_LDAP_FILTER=$(FREEIPA_EJABBER_LDAP_FILTER)" \
 	-e "EJABBERD_LDAP_UIDS=$(FREEIPA_EJABBER_LDAP_UID)" \
+	-v "$(FREEIPA_DATADIR)/ejabberd:/opt/ejabberd" \
 	rroemhild/ejabberd
 
  # For ejabberd view the docs here https://github.com/rroemhild/docker-ejabberd#cluster-example
@@ -352,7 +353,7 @@ host.pem:
 	cat $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/privkey.pem > host.pem
 	cp -i host.pem $(FREEIPA_DATADIR)/etc/letsencrypt/live/$(FREEIPA_FQDN)/
 
-next: grab rmtemp nextmeat prod displaycreds
+next: grab rmtemp nextmeat prod waitforinit displaycreds
 
 nextmeat:
 	mkdir -p /exports/freeipa
