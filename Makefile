@@ -210,12 +210,13 @@ entropyCID:
 	-d \
 	joshuacox/havegedocker:latest
 
-auto: passwords config TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy waitforport80
+auto: passwords config IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID entropy waitforport80
 
 config: configinit configcarry portal/jabber.ldif
 
 configinit:
-	cp -i TAG.example TAG
+	cp TAG.example TAG
+	echo 'freeipa' > NAME
 	curl icanhazip.com > IPA_SERVER_IP
 	/bin/bash ./config.sh
 	cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
