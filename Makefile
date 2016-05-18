@@ -397,7 +397,7 @@ prepCentOS7:
 displaycreds:
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
-	-@echo "you should now login to your server at $(FREEIPA_FQDN) with user admin and pass=$(FREEIPA_MASTER_PASS)"
+	-@echo "you should now login to your server at $(FREEIPA_FQDN) with user admin and pass= $(FREEIPA_MASTER_PASS)"
 
 waitforport80:
 	@echo "Waiting for port 80 to become available"
