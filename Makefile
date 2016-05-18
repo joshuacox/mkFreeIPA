@@ -37,7 +37,7 @@ replicaCID:
 	-v $(FREEIPA_DATADIR):/data:Z \
 	-v `pwd`/portal/:/root/portal \
 	-t $(TAG)
-	docker ps -ql >replicaCID
+	@cp freeipaCID replicaCID
 
 runtempCID:
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
@@ -399,6 +399,6 @@ displaycreds:
 	-@echo "you should now login to your server at $(FREEIPA_FQDN) with user admin and pass=$(FREEIPA_MASTER_PASS)"
 
 waitforport80:
-	echo "Waiting for port 80 to become available"
+	@echo "Waiting for port 80 to become available"
 	@while ! curl --output /dev/null --silent --head --fail http://localhost; do sleep 10 && echo -n .; done;
-	echo "check now"
+	@echo "check port 80, it appears that now it is up!"
