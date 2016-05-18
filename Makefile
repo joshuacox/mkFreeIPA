@@ -261,7 +261,6 @@ ejabberdCID:
 	-h $(FREEIPA_FQDN) \
 	-e "XMPP_DOMAIN=$(FREEIPA_DOMAIN)" \
 	-e "ERLANG_NODE=ejabberd" \
-	-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
 	-e "TZ=America/Chicago" \
 	-e "EJABBERD_ADMIN=admin@$(FREEIPA_DOMAIN)" \
 	-e "EJABBERD_AUTH_METHOD=ldap" \
@@ -275,12 +274,13 @@ ejabberdCID:
 	-e "EJABBERD_LDAP_BASE=$(FREEIPA_EJABBER_LDAP_BASE)" \
 	-e "EJABBERD_LDAP_FILTER=$(FREEIPA_EJABBER_LDAP_FILTER)" \
 	-e "EJABBERD_LDAP_UIDS=$(FREEIPA_EJABBER_LDAP_UID)" \
-	-v "$(FREEIPA_DATADIR)/ejabberd:/opt/ejabberd" \
 	rroemhild/ejabberd
 
  # For ejabberd view the docs here https://github.com/rroemhild/docker-ejabberd#cluster-example
  # not working yet
 	#-v "$(FREEIPA_DATADIR)/data/etc/letsencrypt/live/$(FREEIPA_FQDN):/opt/ejabberd/ssl" \
+	#-v "$(FREEIPA_DATADIR)/ejabberd:/opt/ejabberd" \
+	#-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
 
 cookie:
 	tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
