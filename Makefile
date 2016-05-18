@@ -327,10 +327,10 @@ updateUbuntuTrusty:
 	apt-get update -y
 	apt-get upgrade -y
 	apt-get install linux-generic-lts-vivid linux-headers-generic-lts-vivid
-	wget get.docker.com -O - | sh
-	service docker stop
-	echo 'DOCKER_OPTS="-s overlay"' >> /etc/default/docker
-	echo 'you should reboot this VM to get the new kernel'
+	-@wget get.docker.com -O - | sh
+	-@service docker stop
+	-@echo 'DOCKER_OPTS="-s overlay"' >> /etc/default/docker
+	-@echo 'you should reboot this VM to get the new kernel'
 	#service docker start
 
 pull:
