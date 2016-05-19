@@ -308,6 +308,7 @@ ejabberdCID:
 	-p 5443:5443 \
 	-p 4369:4369 \
 	-h $(FREEIPA_FQDN) \
+	--link $(NAME):$(FREEIPA_FQDN) \
 	-e "XMPP_DOMAIN=$(FREEIPA_DOMAIN)" \
 	-e "ERLANG_NODE=ejabberd" \
 	-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
