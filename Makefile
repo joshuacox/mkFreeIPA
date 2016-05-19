@@ -326,16 +326,16 @@ ejabberdCID:
 	-e "EJABBERD_LDAP_FILTER=$(FREEIPA_EJABBER_LDAP_FILTER)" \
 	-e "EJABBERD_LDAP_UIDS=$(FREEIPA_EJABBER_LDAP_UID)" \
 	-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
-	-v "$(FREEIPA_DATADIR)/ejabberd:/opt/ejabberd" \
+	-v "$(FREEIPA_DATADIR)/data/etc/letsencrypt/live/$(FREEIPA_FQDN):/opt/ejabberd/ssl" \
+	-v "$(FREEIPA_DATADIR)/ejabberd/ssl:/opt/ejabberd/ssl" \
+	-v "$(FREEIPA_DATADIR)/ejabberd/backup:/opt/ejabberd/backup" \
+	-v "$(FREEIPA_DATADIR)/ejabberd/upload:/opt/ejabberd/upload" \
+	-v "$(FREEIPA_DATADIR)/ejabberd/database:/opt/ejabberd/database" \
 	rroemhild/ejabberd
 
  # For ejabberd view the docs here https://github.com/rroemhild/docker-ejabberd#cluster-example
  # not working yet
-	#-v "$(FREEIPA_DATADIR)/data/etc/letsencrypt/live/$(FREEIPA_FQDN):/opt/ejabberd/ssl" \
-	#-v "$(FREEIPA_DATADIR)/ejabberd/ssl:/opt/ejabberd/ssl" \
-	#-v "$(FREEIPA_DATADIR)/ejabberd/backup:/opt/ejabberd/backup" \
-	#-v "$(FREEIPA_DATADIR)/ejabberd/upload:/opt/ejabberd/upload" \
-	#-v "$(FREEIPA_DATADIR)/ejabberd/database:/opt/ejabberd/database" \
+	#-v "$(FREEIPA_DATADIR)/ejabberd:/opt/ejabberd" \
 
 cookie:
 	@tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > FREEIPA_EJABBER_ERLANG_COOKIE
