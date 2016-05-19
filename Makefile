@@ -481,7 +481,7 @@ wait: waitforport80
 
 untarMasterCreds: SHELL:=/bin/bash
 untarMasterCreds:
-	if [ ! -f ../mkFreeIPA.tgz  ]; then
-		echo "../mkFreeIPA.tgz not found! you will need to copy this from the Master after completing prepMaster on the Master"
-	fi
+	if [ ! -f ../mkFreeIPA.tgz  ]; then \
+		echo "../mkFreeIPA.tgz not found! you will need to copy this from the Master after completing prepMaster on the Master" \
+	fi ;
 	@cd ../; tar pzxvf mkFreeIPA.tgz
