@@ -230,7 +230,7 @@ configinit:
 	@cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
 	@cut -f2 -d'.' FREEIPA_FQDN > FREEIPA_SLD
 	@cut -f3 -d'.' FREEIPA_FQDN > FREEIPA_TLD
-	@echo 'uid' >FREEIPA_EJABBER_LDAP_UID
+	@echo 'uid:%u' >FREEIPA_EJABBER_LDAP_UID
 
 configcarry:
 	$(eval FREEIPA_DOMAIN := $(shell cat FREEIPA_DOMAIN))
