@@ -282,7 +282,7 @@ tempejabberdCID:
 	-e "EJABBERD_LDAP_BASE=$(FREEIPA_EJABBER_LDAP_BASE)" \
 	-e "EJABBERD_LDAP_FILTER=$(FREEIPA_EJABBER_LDAP_FILTER)" \
 	-e "EJABBERD_LDAP_UIDS=$(FREEIPA_EJABBER_LDAP_UID)" \
-	rroemhild/ejabberd
+	joshuacox/ejabberd
 
 ejabberdCID:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
@@ -331,10 +331,11 @@ ejabberdCID:
 	-v "$(FREEIPA_DATADIR)/ejabberd/backup:/opt/ejabberd/backup" \
 	-v "$(FREEIPA_DATADIR)/ejabberd/upload:/opt/ejabberd/upload" \
 	-v "$(FREEIPA_DATADIR)/ejabberd/database:/opt/ejabberd/database" \
-	rroemhild/ejabberd
+	joshuacox/ejabberd
 
  # For ejabberd view the docs here https://github.com/rroemhild/docker-ejabberd#cluster-example
  # not working yet
+	#rroemhild/ejabberd
 	#-v "$(FREEIPA_DATADIR)/ejabberd:/opt/ejabberd" \
 	#-v "$(FREEIPA_DATADIR)/data/etc/letsencrypt/live/$(FREEIPA_FQDN):/opt/ejabberd/ssl" \
 
@@ -391,7 +392,10 @@ updateUbuntuTrusty:
 pull:
 	docker pull -t $(TAG)
 	docker pull quay.io/letsencrypt/letsencrypt:latest
-	docker pull rroemhild/ejabberd
+	docker pull joshuacox/ejabberd
+
+notused:
+	#docker pull rroemhild/ejabberd
 
 portal/jabber.ldif:
 	@/bin/bash ./jabberconf.sh
