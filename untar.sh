@@ -5,6 +5,6 @@ if [ ! -f ../mkFreeIPA.tgz  ]; then
 fi ;
 
 if [ -f ../mkFreeIPA.tgz  ]; then
-  cd ../; tar zxvf - mkFreeIPA.tgz
+  cd ../; tar zxvf mkFreeIPA.tgz
   echo 0
 fi ;
