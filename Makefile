@@ -311,6 +311,7 @@ ejabberdCID:
 	-h $(FREEIPA_FQDN) \
 	-e "XMPP_DOMAIN=$(FREEIPA_DOMAIN)" \
 	-e "ERLANG_NODE=ejabberd" \
+	-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
 	-e "TZ=America/Chicago" \
 	-e "EJABBERD_ADMIN=admin@$(FREEIPA_DOMAIN)" \
 	-e "EJABBERD_AUTH_METHOD=ldap" \
