@@ -451,7 +451,7 @@ autoprepMaster:
 	cd $(TMP); tar zcvf mkFreeIPA.tgz mkFreeIPA;
 	echo "you should copy $(TMP)/mkFreeIPA.tgz to the replicant"
 
-prepReplica: config untarMasterCreds prepReplicaMeat
+prepReplica: passwords config untarMasterCreds prepReplicaMeat
 
 prepReplicaMeat:
 	-@echo you need to copy FREEIPA_EJABBER_ERLANG_COOKIE FREEIPA_MASTER_PASS FREEIPA_EJABBER_LDAP_PASS from the parent server
