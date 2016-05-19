@@ -418,7 +418,24 @@ nextmeat:
 
 jabberinit: registerJabberServer
 
-prepareMasterForReplica:
+prepMaster:
+	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
+	@while [ -z "$$REPLICANT_HOSTNAME" ]; do \
+		read -r -p "Enter the replicant hostname you wish to associate with $(FREEIPA_FQDN) [REPLICANT_HOSTNAME]: " REPLICANT_HOSTNAME; echo "$$REPLICANT_HOSTNAME" > $(TMP)/REPLICANT_HOSTNAME; \
+	done ;
+	@while [ -z "$$REPLICANT_IP" ]; do \
+		read -r -p "Enter the replicant hostname you wish to associate with $(FREEIPA_FQDN) [REPLICANT_IP]: " REPLICANT_IP; echo "$$REPLICANT_IP" > $(TMP)/REPLICANT_IP; \
+	done ;
+	docker exec -i -t `cat freeipaCID` ipa-replica-prepare `cat $(TMP)/REPLICANT_HOSTNAME` --ip-address `cat $(TMP)/REPLICANT_IP`
+	mkdir -p $(TMP)/mkFreeIPA
+	docker cp `cat freeipaCID`:/var/lib/ipa/replica-info-`cat $(TMP)/REPLICANT_HOSTNAME`.gpg - |sudo tar -C $(TMP)/mkFreeIPA -pxvf -
+	cp FREEIPA_MASTER_PASS $(TMP)/mkFreeIPA/
+	cp FREEIPA_EJABBER_ERLANG_COOKIE $(TMP)/mkFreeIPA/
+	cp FREEIPA_EJABBER_LDAP_PASS $(TMP)/mkFreeIPA/
+	cd $(TMP); tar zcvf mkFreeIPA.tgz mkFreeIPA;
+	echo "you should copy $(TMP)/mkFreeIPA.tgz to the replicant"
+
+autoprepMaster:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	@while [ -z "$$REPLICANT_HOSTNAME" ]; do \
 		read -r -p "Enter the replicant hostname you wish to associate with $(FREEIPA_FQDN) [REPLICANT_HOSTNAME]: " REPLICANT_HOSTNAME; echo "$$REPLICANT_HOSTNAME" > $(TMP)/REPLICANT_HOSTNAME; dig $$REPLICANT_HOSTNAME +short > $(TMP)/REPLICANT_IP; \
