@@ -332,11 +332,12 @@ ejabberdCID:
 	-v "$(FREEIPA_DATADIR)/ejabberd/backup:/opt/ejabberd/backup" \
 	-v "$(FREEIPA_DATADIR)/ejabberd/upload:/opt/ejabberd/upload" \
 	-v "$(FREEIPA_DATADIR)/ejabberd/database:/opt/ejabberd/database" \
-	joshuacox/ejabberd
+	rroemhild/ejabberd
 
+comments4545454:
  # For ejabberd view the docs here https://github.com/rroemhild/docker-ejabberd#cluster-example
+	#joshuacox/ejabberd
  # not working yet
-	#rroemhild/ejabberd
 	#-v "$(FREEIPA_DATADIR)/ejabberd:/opt/ejabberd" \
 	#-v "$(FREEIPA_DATADIR)/data/etc/letsencrypt/live/$(FREEIPA_FQDN):/opt/ejabberd/ssl" \
 
@@ -394,10 +395,10 @@ pull:
 	$(eval TAG := $(shell cat TAG))
 	docker pull -t $(TAG)
 	docker pull quay.io/letsencrypt/letsencrypt:latest
-	docker pull joshuacox/ejabberd
+	docker pull rroemhild/ejabberd
 
 notused:
-	#docker pull rroemhild/ejabberd
+	docker pull joshuacox/ejabberd
 
 portal/jabber.ldif:
 	@/bin/bash ./jabberconf.sh
