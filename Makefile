@@ -427,7 +427,6 @@ prepMaster:
 	@while [ -z "$$REPLICANT_IP" ]; do \
 		read -r -p "Enter the replicant hostname you wish to associate with $(FREEIPA_FQDN) [REPLICANT_IP]: " REPLICANT_IP; echo "$$REPLICANT_IP" > $(TMP)/REPLICANT_IP; \
 	done ;
-	"echo here is the masterpass: $(FREEIPA_MASTER_PASS)"
 	docker exec -i -t `cat freeipaCID` ipa-replica-prepare `cat $(TMP)/REPLICANT_HOSTNAME` --ip-address `cat $(TMP)/REPLICANT_IP` --password=$(FREEIPA_MASTER_PASS)
 	mkdir -p $(TMP)/mkFreeIPA
 	docker cp `cat freeipaCID`:/var/lib/ipa/replica-info-`cat $(TMP)/REPLICANT_HOSTNAME`.gpg - |sudo tar -C $(TMP)/mkFreeIPA -pxvf -
