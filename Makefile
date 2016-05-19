@@ -302,7 +302,6 @@ ejabberdCID:
 	--name "ejabberd" \
 	--cidfile="ejabberdCID" \
 	-p 5222:5222 \
-	--link $(NAME):freeipa \
 	-p 5269:5269 \
 	--restart=always \
 	-p 5280:5280 \
@@ -318,7 +317,7 @@ ejabberdCID:
 	-e "EJABBERD_WEB_ADMIN_SSL=true" \
 	-e "EJABBERD_STARTTLS=true" \
 	-e "EJABBERD_S2S_SSL=true" \
-	-e "EJABBERD_LDAP_SERVERS=freeipa" \
+	-e "EJABBERD_LDAP_SERVERS=$(FREEIPA_FQDN)" \
 	-e "EJABBERD_LOGLEVEL=2" \
 	-e "EJABBERD_LDAP_ENCRYPT=tls" \
 	-e "EJABBERD_LDAP_PASSWORD=$(FREEIPA_EJABBER_LDAP_PASS)" \
