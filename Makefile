@@ -135,20 +135,20 @@ TAG:
 
 rmall: rm rmtemp
 
-grab: FREEIPA_DATADIR
+grab: FREEIPA_DATADIR chown ejabberDirs
 
 FREEIPA_DATADIR:
 	-mkdir -p datadir
 	@docker cp `cat runtempCID`:/data  - |sudo tar -C datadir/ -pxvf -
 	@echo `pwd`/datadir/data > FREEIPA_DATADIR
+
+ejabberDirs:
+	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	@mkdir -p "$(FREEIPA_DATADIR)/ejabberd/ssl"
 	@mkdir -p "$(FREEIPA_DATADIR)/ejabberd/backup"
 	@mkdir -p "$(FREEIPA_DATADIR)/ejabberd/upload"
 	@mkdir -p "$(FREEIPA_DATADIR)/ejabberd/database"
-	@chown 999:999 "$(FREEIPA_DATADIR)/ejabberd/ssl"
-	@chown 999:999 "$(FREEIPA_DATADIR)/ejabberd/backup"
-	@chown 999:999 "$(FREEIPA_DATADIR)/ejabberd/upload"
-	@chown 999:999 "$(FREEIPA_DATADIR)/ejabberd/database"
+	@chown -R 999:999 "$(FREEIPA_DATADIR)/ejabberd"
 
 FREEIPA_FQDN:
 	@while [ -z "$$FREEIPA_FQDN" ]; do \
