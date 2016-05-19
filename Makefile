@@ -390,6 +390,7 @@ updateUbuntuTrusty:
 	#service docker start
 
 pull:
+	$(eval TAG := $(shell cat TAG))
 	docker pull -t $(TAG)
 	docker pull quay.io/letsencrypt/letsencrypt:latest
 	docker pull joshuacox/ejabberd
