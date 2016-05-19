@@ -225,7 +225,7 @@ config: configinit configcarry portal/jabber.ldif
 configinit:
 	@cp TAG.example TAG
 	@echo 'freeipa' > NAME
-	@curl icanhazip.com > IPA_SERVER_IP
+	@curl -s icanhazip.com > IPA_SERVER_IP
 	@/bin/bash ./config.sh
 	@cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
 	@cut -f2 -d'.' FREEIPA_FQDN > FREEIPA_SLD
@@ -393,7 +393,7 @@ pull:
 	docker pull rroemhild/ejabberd
 
 portal/jabber.ldif:
-	/bin/bash ./jabberconf.sh
+	@/bin/bash ./jabberconf.sh
 
 registerJabberServer:
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
