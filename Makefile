@@ -450,8 +450,11 @@ autoprepMaster:
 	cp FREEIPA_MASTER_PASS $(TMP)/mkFreeIPA/FREEIPA_EJABBER_CLUSTER_PARENT
 	cp FREEIPA_EJABBER_ERLANG_COOKIE $(TMP)/mkFreeIPA/
 	cp FREEIPA_EJABBER_LDAP_PASS $(TMP)/mkFreeIPA/
-	cd $(TMP); tar zcvf mkFreeIPA.tgz mkFreeIPA;
-	echo "you should copy $(TMP)/mkFreeIPA.tgz to the replicant"
+	cd $(TMP); tar zcvf mkFreeIPA.tgz mkFreeIPA
+	rm -f /tmp/mkFreeIPA.tgz
+	mv $(TMP)/mkFreeIPA.tgz /tmp/
+	rm -Rf $(TMP)
+	echo "you should copy /tmp/mkFreeIPA.tgz to the replicant"
 
 prepReplica: passwords config untarMasterCreds prepReplicaMeat
 
