@@ -431,6 +431,7 @@ prepMaster:
 	mkdir -p $(TMP)/mkFreeIPA
 	docker cp `cat freeipaCID`:/var/lib/ipa/replica-info-`cat $(TMP)/REPLICANT_HOSTNAME`.gpg - |sudo tar -C $(TMP)/mkFreeIPA -pxvf -
 	cp FREEIPA_MASTER_PASS $(TMP)/mkFreeIPA/
+	cp FREEIPA_MASTER_PASS $(TMP)/mkFreeIPA/FREEIPA_EJABBER_CLUSTER_PARENT
 	cp FREEIPA_EJABBER_ERLANG_COOKIE $(TMP)/mkFreeIPA/
 	cp FREEIPA_EJABBER_LDAP_PASS $(TMP)/mkFreeIPA/
 	cd $(TMP); tar zcvf mkFreeIPA.tgz mkFreeIPA;
@@ -446,6 +447,7 @@ autoprepMaster:
 	mkdir -p $(TMP)/mkFreeIPA
 	docker cp `cat freeipaCID`:/var/lib/ipa/replica-info-`cat $(TMP)/REPLICANT_HOSTNAME`.gpg - |sudo tar -C $(TMP)/mkFreeIPA -pxvf -
 	cp FREEIPA_MASTER_PASS $(TMP)/mkFreeIPA/
+	cp FREEIPA_MASTER_PASS $(TMP)/mkFreeIPA/FREEIPA_EJABBER_CLUSTER_PARENT
 	cp FREEIPA_EJABBER_ERLANG_COOKIE $(TMP)/mkFreeIPA/
 	cp FREEIPA_EJABBER_LDAP_PASS $(TMP)/mkFreeIPA/
 	cd $(TMP); tar zcvf mkFreeIPA.tgz mkFreeIPA;
