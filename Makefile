@@ -480,4 +480,7 @@ waitforport80:
 wait: waitforport80
 
 untarMasterCreds:
-	/bin/bash ./untar.sh
+	-@rm -Rf /exports/freeipa/datadir
+	-@mkdir -p /exports/freeipa/datadir/data
+	-@echo '/exports/freeipa/datadir/data' > FREEIPA_DATADIR
+	-@/bin/bash ./untar.sh
