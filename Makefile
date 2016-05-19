@@ -454,7 +454,6 @@ autoprepMaster:
 prepReplica: passwords config untarMasterCreds prepReplicaMeat
 
 prepReplicaMeat:
-	-@echo you need to copy FREEIPA_EJABBER_ERLANG_COOKIE FREEIPA_MASTER_PASS FREEIPA_EJABBER_LDAP_PASS from the parent server
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
 	-@rm -Rf $(FREEIPA_DATADIR)
@@ -480,7 +479,9 @@ waitforport80:
 wait: waitforport80
 
 untarMasterCreds:
+	-@echo you need to copy FREEIPA_EJABBER_ERLANG_COOKIE FREEIPA_MASTER_PASS FREEIPA_EJABBER_LDAP_PASS from the parent server
 	-@rm -Rf /exports/freeipa/datadir
 	-@mkdir -p /exports/freeipa/datadir/data
 	-@echo '/exports/freeipa/datadir/data' > FREEIPA_DATADIR
+	-@echo attempting to get them now
 	-@/bin/bash ./untar.sh
