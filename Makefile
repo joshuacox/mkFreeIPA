@@ -451,9 +451,9 @@ autoprepMaster:
 	cd $(TMP); tar zcvf mkFreeIPA.tgz mkFreeIPA;
 	echo "you should copy $(TMP)/mkFreeIPA.tgz to the replicant"
 
-prepareReplica: config prepareReplicaMeat
+prepReplica: config untarMasterCreds prepReplicaMeat
 
-prepareReplicaMeat:
+prepReplicaMeat:
 	-@echo you need to copy FREEIPA_EJABBER_ERLANG_COOKIE FREEIPA_MASTER_PASS FREEIPA_EJABBER_LDAP_PASS from the parent server
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
@@ -478,3 +478,9 @@ waitforport80:
 	@echo "check port 80, it appears that now it is up!"
 
 wait: waitforport80
+
+untarMasterCreds:
+	if [ ! -f ../mkFreeIPA.tgz  ]; then
+		echo "../mkFreeIPA.tgz not found! you will need to copy this from the Master after completing prepMaster on the Master"
+	fi
+	@cd ../; tar pzxvf mkFreeIPA.tgz
