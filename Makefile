@@ -14,7 +14,7 @@ help:
 temp: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS runtempCID waitforport80 templogs
 
 # after letting temp settle you can `make grab` and grab the data directory for persistence
-prod: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS freeipaCID
+prod: TAG NAME IPA_SERVER_IP FREEIPA_FQDN FREEIPA_MASTER_PASS entropy freeipaCID
 
 jabber: prod FREEIPA_DOMAIN FREEIPA_EJABBER_LDAP_ROOTDN FREEIPA_EJABBER_LDAP_UID FREEIPA_EJABBER_LDAP_FILTER FREEIPA_EJABBER_LDAP_BASE FREEIPA_EJABBER_LDAP_PASS ejabberdCID
 
@@ -102,6 +102,11 @@ rmtemp:
 	-@docker rm `cat runtempCID`
 	-@rm runtempCID
 
+rmentropy:
+	-@docker kill `cat entropyCID`
+	-@docker rm `cat entropyCID`
+	-@rm entropyCID
+
 rm: kill rm-image
 
 rmjabber:
@@ -133,7 +138,7 @@ TAG:
 		read -r -p "Enter the tag you wish to associate with this container, hint `make example` [TAG]: " TAG; echo "$$TAG">>TAG; cat TAG; \
 	done ;
 
-rmall: rm rmtemp
+rmall: rm rmtemp rmentropy
 
 grab: FREEIPA_DATADIR ejabberDirs
 
