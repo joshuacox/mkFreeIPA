@@ -24,14 +24,15 @@ replicaCID:
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
 	$(eval NAME := $(shell cat NAME))
+	$(eval IPA_SERVER_IP := $(shell cat IPA_SERVER_IP))
 	$(eval TAG := $(shell cat TAG))
 	@docker run --name=$(NAME) \
 	--cidfile="freeipaCID" \
 	-d \
-	-p 53:53/udp -p 53:53 \
-	-p 80:80 -p 443:443 -p 389:389 -p 636:636 -p 88:88 -p 464:464 \
-	-p 88:88/udp -p 464:464/udp -p 123:123/udp -p 7389:7389 \
-	-p 9443:9443 -p 9444:9444 -p 9445:9445 \
+	-p $(IPA_SERVER_IP):53:53/udp -p $(IPA_SERVER_IP):53:53 \
+	-p $(IPA_SERVER_IP):80:80 -p $(IPA_SERVER_IP):443:443 -p $(IPA_SERVER_IP):389:389 -p $(IPA_SERVER_IP):636:636 -p $(IPA_SERVER_IP):88:88 -p $(IPA_SERVER_IP):464:464 \
+	-p $(IPA_SERVER_IP):88:88/udp -p $(IPA_SERVER_IP):464:464/udp -p $(IPA_SERVER_IP):123:123/udp -p $(IPA_SERVER_IP):7389:7389 \
+	-p $(IPA_SERVER_IP):9443:9443 -p $(IPA_SERVER_IP):9444:9444 -p $(IPA_SERVER_IP):9445:9445 \
 	-h $(FREEIPA_FQDN) \
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 	-v $(FREEIPA_DATADIR):/data:Z \
@@ -51,10 +52,10 @@ runtempCID:
 	-d \
 	-e IPA_SERVER_IP=$(IPA_SERVER_IP) \
 	-e IPA_SERVER_INSTALL_OPTS="$(IPA_SERVER_INSTALL_OPTS)" \
-	-p 53:53/udp -p 53:53 \
-	-p 80:80 -p 443:443 -p 389:389 -p 636:636 -p 88:88 -p 464:464 \
-	-p 88:88/udp -p 464:464/udp -p 123:123/udp -p 7389:7389 \
-	-p 9443:9443 -p 9444:9444 -p 9445:9445 \
+	-p $(IPA_SERVER_IP):80:80 -p $(IPA_SERVER_IP):443:443 -p $(IPA_SERVER_IP):389:389 -p $(IPA_SERVER_IP):636:636 -p $(IPA_SERVER_IP):88:88 -p $(IPA_SERVER_IP):464:464 \
+	-p $(IPA_SERVER_IP):88:88/udp -p $(IPA_SERVER_IP):464:464/udp -p $(IPA_SERVER_IP):123:123/udp -p $(IPA_SERVER_IP):7389:7389 \
+	-p $(IPA_SERVER_IP):9443:9443 -p $(IPA_SERVER_IP):9444:9444 -p $(IPA_SERVER_IP):9445:9445 \
+	-p $(IPA_SERVER_IP):53:53/udp -p $(IPA_SERVER_IP):53:53 \
 	-h $(FREEIPA_FQDN) \
 	-e PASSWORD=$(FREEIPA_MASTER_PASS) \
 	-v `pwd`/portal/:/root/portal \
@@ -72,10 +73,10 @@ freeipaCID:
 	--cidfile="freeipaCID" \
 	-d \
 	-e IPA_SERVER_IP=$(IPA_SERVER_IP) \
-	-p 53:53/udp -p 53:53 \
-	-p 80:80 -p 443:443 -p 389:389 -p 636:636 -p 88:88 -p 464:464 \
-	-p 88:88/udp -p 464:464/udp -p 123:123/udp -p 7389:7389 \
-	-p 9443:9443 -p 9444:9444 -p 9445:9445 \
+	-p $(IPA_SERVER_IP):80:80 -p $(IPA_SERVER_IP):443:443 -p $(IPA_SERVER_IP):389:389 -p $(IPA_SERVER_IP):636:636 -p $(IPA_SERVER_IP):88:88 -p $(IPA_SERVER_IP):464:464 \
+	-p $(IPA_SERVER_IP):88:88/udp -p $(IPA_SERVER_IP):464:464/udp -p $(IPA_SERVER_IP):123:123/udp -p $(IPA_SERVER_IP):7389:7389 \
+	-p $(IPA_SERVER_IP):9443:9443 -p $(IPA_SERVER_IP):9444:9444 -p $(IPA_SERVER_IP):9445:9445 \
+	-p $(IPA_SERVER_IP):53:53/udp -p $(IPA_SERVER_IP):53:53 \
 	-h $(FREEIPA_FQDN) \
 	-e PASSWORD=$(FREEIPA_MASTER_PASS) \
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
@@ -264,13 +265,13 @@ tempejabberdCID:
 	docker run -d \
 	--name "ejabberd" \
 	--cidfile="tempejabberdCID" \
-	-p 5222:5222 \
+	-p $(IPA_SERVER_IP):5222:5222 \
 	--link $(NAME):freeipa \
-	-p 5269:5269 \
+	-p $(IPA_SERVER_IP):5269:5269 \
 	--restart=always \
-	-p 5280:5280 \
-	-p 5443:5443 \
-	-p 4369:4369 \
+	-p $(IPA_SERVER_IP):5280:5280 \
+	-p $(IPA_SERVER_IP):5443:5443 \
+	-p $(IPA_SERVER_IP):4369:4369 \
 	-h $(FREEIPA_FQDN) \
 	-e "XMPP_DOMAIN=$(FREEIPA_DOMAIN)" \
 	-e "ERLANG_NODE=ejabberd" \
@@ -306,12 +307,12 @@ ejabberdCID:
 	docker run -d \
 	--name "ejabberd" \
 	--cidfile="ejabberdCID" \
-	-p 5222:5222 \
-	-p 5269:5269 \
+	-p $(IPA_SERVER_IP):5222:5222 \
+	-p $(IPA_SERVER_IP):5269:5269 \
 	--restart=always \
-	-p 5280:5280 \
-	-p 5443:5443 \
-	-p 4369:4369 \
+	-p $(IPA_SERVER_IP):5280:5280 \
+	-p $(IPA_SERVER_IP):5443:5443 \
+	-p $(IPA_SERVER_IP):4369:4369 \
 	-h $(FREEIPA_FQDN) \
 	--link $(NAME):$(FREEIPA_FQDN) \
 	-e "XMPP_DOMAIN=$(FREEIPA_DOMAIN)" \
@@ -360,11 +361,12 @@ replicant: replica
 cert:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
+	$(eval IPA_SERVER_IP := $(shell cat IPA_SERVER_IP))
 	@while [ -z "$$EMAIL" ]; do \
 		read -r -p "Enter the contact email you wish to associate with $(FREEIPA_FQDN) [EMAIL]: " EMAIL; echo "$$EMAIL" > $(TMP)/EMAIL; \
 	done ;
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
-	docker run -it --rm -p 443:443 -p 80:80 --name certbot \
+	docker run -it --rm -p $(IPA_SERVER_IP):443:443 -p $(IPA_SERVER_IP):80:80 --name certbot \
 	-v "$(FREEIPA_DATADIR)/etc/letsencrypt:/etc/letsencrypt" \
 	-v "$(FREEIPA_DATADIR)/var/lib/letsencrypt:/var/lib/letsencrypt" \
 	quay.io/letsencrypt/letsencrypt:latest auth --standalone -n -d "$(FREEIPA_FQDN)" --agree-tos --email "`cat $(TMP)/EMAIL`"
@@ -373,9 +375,10 @@ cert:
 renew: renewmeat host.pem
 
 renewmeat:
+	$(eval IPA_SERVER_IP := $(shell cat IPA_SERVER_IP))
 	rm host.pem
 	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
-	docker run -it --rm -p 443:443 -p 80:80 --name certbot \
+	docker run -it --rm -p $(IPA_SERVER_IP):443:443 -p $(IPA_SERVER_IP):80:80 --name certbot \
 	-v "$(FREEIPA_DATADIR)/etc/letsencrypt:/etc/letsencrypt" \
 	-v "$(FREEIPA_DATADIR)/var/lib/letsencrypt:/var/lib/letsencrypt" \
 	quay.io/letsencrypt/letsencrypt:latest renew
