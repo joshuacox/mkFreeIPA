@@ -334,6 +334,54 @@ ejabberdCID:
 	-e "EJABBERD_LDAP_FILTER=$(FREEIPA_EJABBER_LDAP_FILTER)" \
 	-e "EJABBERD_LDAP_UIDS=$(FREEIPA_EJABBER_LDAP_UID)" \
 	-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
+	-v "$(FREEIPA_DATADIR)/ejabberd:/opt/ejabberd" \
+	rroemhild/ejabberd
+
+
+ejabberdmanymountCID:
+	$(eval FREEIPA_DATADIR := $(shell cat FREEIPA_DATADIR))
+	$(eval FREEIPA_MASTER_PASS := $(shell cat FREEIPA_MASTER_PASS))
+	$(eval FREEIPA_FQDN := $(shell cat FREEIPA_FQDN))
+	$(eval FREEIPA_DOMAIN := $(shell cat FREEIPA_DOMAIN))
+	$(eval FREEIPA_EJABBER_LDAP_ROOTDN := $(shell cat FREEIPA_EJABBER_LDAP_ROOTDN))
+	$(eval FREEIPA_EJABBER_LDAP_PASS := $(shell cat FREEIPA_EJABBER_LDAP_PASS))
+	$(eval FREEIPA_EJABBER_LDAP_BASE := $(shell cat FREEIPA_EJABBER_LDAP_BASE))
+	$(eval FREEIPA_EJABBER_LDAP_FILTER := $(shell cat FREEIPA_EJABBER_LDAP_FILTER))
+	$(eval FREEIPA_EJABBER_LDAP_UID := $(shell cat FREEIPA_EJABBER_LDAP_UID))
+	$(eval FREEIPA_EJABBER_ERLANG_COOKIE := $(shell cat FREEIPA_EJABBER_ERLANG_COOKIE))
+	$(eval NAME := $(shell cat NAME))
+	$(eval TAG := $(shell cat TAG))
+	$(eval IPA_SERVER_IP := $(shell cat IPA_SERVER_IP))
+	docker run -d \
+	--name "ejabberd" \
+	--cidfile="ejabberdCID" \
+	-p $(IPA_SERVER_IP):5222:5222 \
+	-p $(IPA_SERVER_IP):5269:5269 \
+	--restart=always \
+	-p $(IPA_SERVER_IP):5280:5280 \
+	-p $(IPA_SERVER_IP):5443:5443 \
+	-p $(IPA_SERVER_IP):4369:4369 \
+	-h $(FREEIPA_FQDN) \
+	--link $(NAME):$(FREEIPA_FQDN) \
+	-e "XMPP_DOMAIN=$(FREEIPA_DOMAIN)" \
+	-e "ERLANG_NODE=ejabberd" \
+	-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
+	-e "TZ=America/Chicago" \
+	-e "EJABBERD_ADMIN=admin@$(FREEIPA_DOMAIN)" \
+	-e "EJABBERD_AUTH_METHOD=ldap" \
+	-e "EJABBERD_WEB_ADMIN_SSL=true" \
+	-e "EJABBERD_STARTTLS=true" \
+	-e "EJABBERD_S2S_SSL=true" \
+	-e "EJABBERD_LDAP_SERVERS=$(FREEIPA_FQDN)" \
+	-e "EJABBERD_LOGLEVEL=2" \
+	-e "EJABBERD_LDAP_ENCRYPT=tls" \
+	-e "EJABBERD_LDAP_PASSWORD=$(FREEIPA_EJABBER_LDAP_PASS)" \
+	-e "EJABBERD_LDAP_DEREF_ALIASES=always" \
+	-e "EJABBERD_LDAP_BASE=$(FREEIPA_EJABBER_LDAP_BASE)" \
+	-e "EJABBERD_LDAP_ROOTDN=$(FREEIPA_EJABBER_LDAP_ROOTDN)" \
+	-e "EJABBERD_LDAP_FILTER=$(FREEIPA_EJABBER_LDAP_FILTER)" \
+	-e "EJABBERD_LDAP_UIDS=$(FREEIPA_EJABBER_LDAP_UID)" \
+	-e "ERLANG_COOKIE=$(FREEIPA_EJABBER_ERLANG_COOKIE)" \
 	-v "$(FREEIPA_DATADIR)/ejabberd/ssl:/opt/ejabberd/ssl" \
 	-v "$(FREEIPA_DATADIR)/ejabberd/backup:/opt/ejabberd/backup" \
 	-v "$(FREEIPA_DATADIR)/ejabberd/upload:/opt/ejabberd/upload" \
