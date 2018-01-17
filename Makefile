@@ -35,6 +35,7 @@ replicaCID:
 	-p $(IPA_SERVER_IP):9443:9443 -p $(IPA_SERVER_IP):9444:9444 -p $(IPA_SERVER_IP):9445:9445 \
 	-h $(FREEIPA_FQDN) \
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+	--tmpfs /run --tmpfs /tmp \
 	-v $(FREEIPA_DATADIR):/data:Z \
 	-v `pwd`/portal/:/root/portal \
 	-t $(TAG)
@@ -60,6 +61,7 @@ runtempCID:
 	-e PASSWORD=$(FREEIPA_MASTER_PASS) \
 	-v `pwd`/portal/:/root/portal \
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+	--tmpfs /run --tmpfs /tmp \
 	-t $(TAG)
 
 freeipaCID:
@@ -80,6 +82,7 @@ freeipaCID:
 	-h $(FREEIPA_FQDN) \
 	-e PASSWORD=$(FREEIPA_MASTER_PASS) \
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+	--tmpfs /run --tmpfs /tmp \
 	-v `pwd`jabber.ldif:/root/jabber.ldif \
 	-v `pwd`/portal/:/root/portal \
 	-v $(FREEIPA_DATADIR):/data:Z \
@@ -201,6 +204,9 @@ FREEIPA_DOMAIN:
 		read -r -p "Enter the DOMAIN you wish to associate with this container [FREEIPA_DOMAIN]: " FREEIPA_DOMAIN; echo "$$FREEIPA_DOMAIN">>FREEIPA_DOMAIN; cat FREEIPA_DOMAIN; \
 	done ;
 
+IPA_SERVER_IP_AUTO:
+	@curl -s icanhazip.com > IPA_SERVER_IP
+
 IPA_SERVER_IP:
 	@while [ -z "$$IPA_SERVER_IP" ]; do \
 		read -r -p "Enter the public IP address of this container [IPA_SERVER_IP]: " IPA_SERVER_IP; echo "$$IPA_SERVER_IP">>IPA_SERVER_IP; \
@@ -231,7 +237,6 @@ config: configinit configcarry portal/jabber.ldif
 configinit:
 	@cp TAG.example TAG
 	@echo 'freeipa' > NAME
-	@curl -s icanhazip.com > IPA_SERVER_IP
 	@/bin/bash ./config.sh
 	@cut -f2,3 -d'.' FREEIPA_FQDN > FREEIPA_DOMAIN
 	@cut -f2 -d'.' FREEIPA_FQDN > FREEIPA_SLD
